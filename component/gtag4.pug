@@ -8,10 +8,16 @@ if GA_MEASUREMENT_ID
     function gtag () { window.dataLayer.push(arguments) }
     gtag('js', new Date())
     gtag('config', window.GA_MEASUREMENT_ID, { send_page_view: false })
-    ;(liff => {
-      if (!liff) return
+    ;(async () => {
+      const sleep = t => new Promise(resolve => { setTimeout(resolve, t) })
+      let cnt = 100
+      while (cnt--) {
+        if (window.liff && window.liff.getVersion) break
+        await sleep(100) // 等候 liff 載入
+      }
+      const liff = window.liff
       gtag('set', 'user_properties', {
         liffVersion: liff.getVersion(),
         ...(liff.isInClient() ? { lineVersion: liff.getLineVersion() } : {}),
       })
-    })(window.liff)
+    })()

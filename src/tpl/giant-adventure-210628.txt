@@ -107,7 +107,7 @@ function renderCard (ctx) {
                 gravity: 'center',
                 size: 'full',
                 type: 'image',
-                url: profile.pictureUrl || 'https://i.imgur.com/ceV22WT.png',
+                url: profile.pictureUrl || 'https://i.imgur.com/N8j56jz.png',
               },
             ],
           },

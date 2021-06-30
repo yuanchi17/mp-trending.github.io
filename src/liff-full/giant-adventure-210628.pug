@@ -3,12 +3,12 @@ extends /layout/liff
 block beforehtml
   -
     title = '捷安特旅行社'
-    description = '捷安特旅行社，無線希望的力量。'
+    description = '捷安特旅行社，無限希望的力量。'
 
 block style
   meta(property="og:image:height", content="570")
   meta(property="og:image:width", content="1125")
-  meta(property="og:image", content="https://i.imgur.com/rGd0OHe.png")
+  meta(property="og:image", content="https://i.imgur.com/KOVVPkY.png")
   meta(property="og:url", content=`https://liff.line.me/${liffidFull}/giant-adventure-210628.html`)
   style
     :sass
@@ -140,7 +140,7 @@ block script
             const res = await liff.shareTargetPicker(msgs)
             const afterShare = Date.now()
             if (afterShare - beforeShare > 1000 && _.get(res, 'status') !== 'success') throw new Error('您已取消分享')
-            gtag('event', 'share', { content_type: campaign, item_id: `https://i.imgur.com/${this.selected}.png` })
+            gtag('event', 'share', { campaign, content_type: `https://i.imgur.com/${this.selected}.png`, item_id: this.text.slice(0, 100) })
             await Swal.fire({ icon: 'success', title: '送出成功', text: '你可以繼續製作下一張卡片' })
           } catch (err) {
             err.message = _.get(err, 'response.data.message', err.message)
