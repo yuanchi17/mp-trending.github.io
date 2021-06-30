@@ -1,0 +1,196 @@
+extends /layout/liff
+
+block beforehtml
+  -
+    title = '捷安特旅行社'
+    description = '捷安特旅行社，無線希望的力量。'
+
+block style
+  meta(property="og:image:height", content="570")
+  meta(property="og:image:width", content="1125")
+  meta(property="og:image", content="https://i.imgur.com/rGd0OHe.png")
+  meta(property="og:url", content=`https://liff.line.me/${liffidFull}/giant-adventure-210628.html`)
+  style
+    :sass
+      [v-cloak]
+        display: none
+      body
+        background: fixed rgba(231,254,248,1) center bottom no-repeat
+        background-image: url('https://i.imgur.com/wAmC1XD.png')
+      .card
+        border: 1px solid #abfecc
+        box-shadow: 0 2px 3px rgba(40,70,20, 0.15)
+      .btn-img
+        border: 1px solid #dddddd
+        position: relative
+        i.fa
+          position: absolute
+          right: 0
+          color: #00894a
+      .btn:focus, .btn.selected
+        border: solid 3px #00894a
+        box-shadow: none
+
+block content
+  #app.container.my-4.text-monospace(v-cloak, style="max-width: 562.5px")
+    h3.text-center.font-color 防疫期間送關懷
+    img.mb-2.w-100(src="https://i.imgur.com/KOVVPkY.png", :key="'img-mission'")
+    .card
+      .card-body
+        h5.text-center.font-weight-bold 挑選喜歡的小卡
+        #card.mb-3
+          .row.mx-n1(v-for="(chunk, cId) of _.chunk(cards, 2)" :key="`row-${cId}`")
+            .col.p-0(v-for="imgur of chunk" :key="imgur")
+              button.btn.btn-img.m-2.p-0(:class="{'selected': selected === imgur}", @click="btnSelect(imgur)")
+                img.w-100.rounded(:src="`https://i.imgur.com/${imgur}.png`")
+                i.fa.m-1.p-0(:class="selected === imgur ? 'fa-check-circle-o' : 'fa-circle-o'")
+        .form-group.m-0
+          textarea.form-control(v-model="text", placeholder="想跟朋友說什麼呢？")
+    button.btn.btn-lg.btn-block.btn-success.mt-3(type="button", @click="btnShare", :disabled="!selected || !text") 送卡片給好友
+
+block script
+  script.
+    const loginPromise = (async () => {
+      await liff.init({ liffId: '#{liffidFull}' })
+      if (!liff.isLoggedIn()) {
+        liff.login({ redirectUri: location.href })
+        return await new Promise(resolve => {}) // 永遠不會結束的 Promise
+      }
+      let profile = {}
+      try {
+        profile = await liff.getProfile()
+        gtag('set', 'user_id', profile.userId)
+      } catch (err) {
+        console.error(err)
+      }
+      return profile
+    })()
+    const campaign = '捷安特旅行社210630'
+    window.vm = new Vue({
+      el: '#app',
+      data: {
+        cards: ['LYPoRkM', 'vjEwRbs', 'vfbykKV', '2bBiRsE'],
+        msgs: null,
+        selected: null,
+        text: '',
+        h: {
+          source: null,
+        },
+      },
+      async mounted () {
+        this.showLoading('請稍候', '正在載入網頁')
+        // 自動儲存功能
+        try {
+          const saved = JSON.parse(localStorage.getItem(location.pathname))
+          if (saved) this.$set(this, 'h', { ...this.h, ...saved })
+        } catch (err) {}
+        this.$watch('h', () => {
+          localStorage.setItem(location.pathname, JSON.stringify(this.h))
+        }, { deep: true })
+
+        try {
+          await Promise.all([
+            this.initGtag(),
+            this.initTpl(),
+          ])
+          this.hideLoading()
+        } catch (err) {
+          console.error(err)
+          await Swal.fire({ icon: 'error', title: '網頁讀取失敗', text: err.message })
+        }
+      },
+      computed: {
+        source () {
+          if (!this.h.source) this.h.source = this.param('source')
+          return this.h.source || '未知'
+        },
+      },
+      methods: {
+        async initGtag () {
+          await loginPromise
+          const referral = this.param('referral', null)
+          gtag('event', 'screen_view', { screen_name: `${campaign}-製作賀卡-${this.source}` })
+          gtag('event', 'join_group', { group_id: campaign }) // 參加活動
+          if (referral) gtag('event', 'campaign_referral', { campaign, line_id: referral })
+        },
+        async initTpl () {
+          const tpl = '/tpl/giant-adventure-210628.txt'
+          const render = _.template(_.get(await axios.get(tpl, {
+            params: { cachebust: Date.now() },
+            transformResponse: [],
+          }), 'data'))
+          this.render = options => render({ _, dayjs, Qs, ...options })
+        },
+        async btnShare () {
+          try {
+            this.showLoading('請稍候', '正在開啟分享畫面')
+            if (!liff.isApiAvailable('shareTargetPicker')) throw new Error('您的裝置不支援此功能，請嘗試重新開啟此頁面或更新應用程式版本。')
+            const profile = await loginPromise
+
+            const share = new URL(liff.permanentLink.createUrl())
+            share.searchParams.set('referral', profile.userId)
+
+            const msgs = this.getRenderedMsgs({
+              imgur: this.selected,
+              profile,
+              share: share.href,
+              text: this.text,
+            })
+            const beforeShare = Date.now()
+            const res = await liff.shareTargetPicker(msgs)
+            const afterShare = Date.now()
+            if (afterShare - beforeShare > 1000 && _.get(res, 'status') !== 'success') throw new Error('您已取消分享')
+            gtag('event', 'share', { content_type: campaign, item_id: `https://i.imgur.com/${this.selected}.png` })
+            await Swal.fire({ icon: 'success', title: '送出成功', text: '你可以繼續製作下一張卡片' })
+          } catch (err) {
+            err.message = _.get(err, 'response.data.message', err.message)
+            console.error(err)
+            await Swal.fire({ icon: 'error', title: '送出失敗', text: err.message })
+          }
+        },
+        async btnSelect (imgur) {
+          const result = await Swal.fire({
+            cancelButtonText: '關閉',
+            confirmButtonText: '選擇',
+            imageUrl: `https://i.imgur.com/${imgur}.png`,
+            showCancelButton: true,
+            customClass: {
+              header: 'px-0',
+              image: 'my-0',
+            },
+          })
+          if (!result.value) return
+          this.$set(this, 'selected', imgur)
+        },
+        getRenderedMsgs (options) {
+          let msg = this.render(options)
+          console.log(msg)
+          msg = JSON5.parse(msg)
+          if (_.includes(['bubble', 'carousel'], _.get(msg, 'type'))) {
+            msg = { type: 'flex', altText: this.$t('flexAltText'), contents: msg }
+          }
+          msg = _.castArray(msg)
+          return msg
+        },
+        showLoading (title, text) {
+          Swal.fire({
+            title,
+            text,
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            willOpen: () => { Swal.showLoading() },
+          })
+        },
+        isLoading () {
+          return Swal.isVisible() && Swal.isLoading()
+        },
+        hideLoading () {
+          Swal.close()
+        },
+        param (key, defaultValue) {
+          const val = new URL(location).searchParams.get(key)
+          return _.isNil(val) ? defaultValue : val
+        },
+      },
+    })
+

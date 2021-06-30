@@ -1,0 +1,17 @@
+//- https://developers.google.com/gtagjs/reference/event
+//- https://developers.google.com/gtagjs/reference/ga4-events#share
+if GA_MEASUREMENT_ID
+  script(async, src=`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`)
+  script.
+    window.dataLayer = window.dataLayer || []
+    window.GA_MEASUREMENT_ID = '#{GA_MEASUREMENT_ID}'
+    function gtag () { window.dataLayer.push(arguments) }
+    gtag('js', new Date())
+    gtag('config', window.GA_MEASUREMENT_ID, { send_page_view: false })
+    ;(liff => {
+      if (!liff) return
+      gtag('set', 'user_properties', {
+        liffVersion: liff.getVersion(),
+        ...(liff.isInClient() ? { lineVersion: liff.getLineVersion() } : {}),
+      })
+    })(window.liff)
