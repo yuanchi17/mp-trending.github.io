@@ -10,6 +10,7 @@ module.exports = {
     'standard',
   ],
   globals: {
+    _: 'readonly',
     VConsole: 'readonly',
   },
   parserOptions: {

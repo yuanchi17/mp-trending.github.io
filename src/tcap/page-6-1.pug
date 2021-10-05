@@ -1,0 +1,77 @@
+extends /layout/tcap
+
+block style
+  meta(property="og:url", content=`${baseurl}tcap/`)
+  style
+    :sass
+      body
+        background-color: #F2F6F9
+
+block content
+  #app.container.d-flex.flex-column.min-vh-100(v-cloak)
+    h2.my-3.mb-3.text-center.title-style 取得預約資格
+    #ticket.card.mb-4
+      .card-body
+        h4.m-0.text-center.text-blue 入園資訊
+        h3.my-2.text-blue {{ order.date }}
+        .d-flex.mb-2.text-gray(v-if="order.tickets.normal")
+          p.m-0.mr-2 全&emsp;票
+          small.my-auto.text-gray-light (一般民眾)
+          p.m-0.mx-1.ml-auto {{order.tickets.normal}} 張
+        .d-flex.mb-2.text-gray(v-if="order.tickets.student")
+          p.m-0.mr-2 優待票
+          small.my-auto.text-gray-light (學生或 7~12 歲兒童)
+          p.m-0.mx-1.ml-auto {{order.tickets.student}} 張
+        .d-flex.mb-2.text-gray(v-if="order.tickets.freeOld")
+          p.m-0.mr-2 免費票
+          small.my-auto.text-gray-light (長者或愛心及陪伴者)
+          p.m-0.mx-1.ml-auto {{order.tickets.freeOld}} 張
+        .d-flex.mb-2.text-gray(v-if="order.tickets.free6")
+          p.m-0.mr-2 免費票
+          small.my-auto.text-gray-light (6 歲以下兒童)
+          p.m-0.mx-1.ml-auto {{order.tickets.free6}} 張
+        .d-flex.mb-2.text-gray(v-if="order.tickets.freeOther")
+          p.m-0.mr-2 免費票
+          small.my-auto.text-gray-light (其他)
+          p.m-0.mx-1.ml-auto {{order.tickets.freeOther}} 張
+      .line
+      .card-body
+        h4.card-title.text-center.text-blue 已預約設施
+        .d-flex.mb-2(v-for='(game, tId) of order.games' :key='tId')
+          p.m-0.text-blue {{ game.name }}
+          p.m-0.ml-auto.text-gray {{ game.time }}
+    p.text-center.text-gray-light 恭喜您取得預約資格，您可以點選「預約設施」即可安排當天的玩樂行程
+    a.my-2.mt-auto.btn.btn-block.btn-primary(href=`${baseurl}tcap/page-1-9.html`) 預約設施
+
+block script
+  script.
+    window.vm = new Vue({
+      el: '#app',
+      data: {
+        order: {
+          checkin: false,
+          date: '2021-10-14',
+          extend: true,
+          tickets: {
+            normal: 3,
+            student: 2,
+            free6: 1,
+            freeOld: 1,
+            freeOther: 1,
+          },
+          games: [
+            { name: '海洋總動員', time: '09:00 ~ 09:30' },
+            { name: '摩天輪', time: '10:15 ~ 10:30' },
+            { name: '飛天神奇號', time: '11:00 ~ 11:45' },
+            { name: '星空小飛碟', time: '14:00 ~ 14:25' },
+            { name: '碰碰車', time: '15:00 ~ 15:25' },
+          ],
+          ctx: {
+            name: 'xxx',
+            phone: '09********',
+            email: 'xxxxx@xxxx.com.tw',
+          },
+        },
+      },
+    })
+

@@ -1,0 +1,97 @@
+extends /layout/tcap
+
+block style
+  meta(property="og:url", content=`${baseurl}tcap/`)
+  style
+    :sass
+      .aspect-ratio-box
+        height: 0
+        overflow: hidden
+        position: relative
+      .aspect-ratio-box-inside
+        position: absolute
+        top: 0
+        left: 0
+        width: 100%
+        height: 100%
+      .booking
+        background-color: #f2f6f9
+      .booking-progress
+        .booking-progress-bar
+          padding: 0 32px
+        .booking-progress-circle
+          width: 16px
+          height: 16px
+          border: 2px solid rgba(112,112,112,.6)
+        .booking-progress-circle.active
+          border: 2px solid #4478dd
+        .booking-progress-circle.finished
+          border: 5px solid #4478dd
+        .booking-progress-line
+          height: 2px
+          background-color: rgba(112,112,112,.6)
+        .booking-progress-line.finished
+          background-color: #4478dd
+        .booking-progress-label
+          width: 80px
+          font-size: .8rem
+          white-space: nowrap
+          color: rgb(112,112,112)
+        .booking-progress-label.finished
+          color: #4478dd
+      .hr-dotted
+        border-top: 2px dotted rgba(0,0,0,.1)
+
+block content
+  #app
+    .container-fluid.px-0.d-flex.flex-column.min-vh-100(style="background-color: #4478dd")
+      .aspect-ratio-box(style="padding-top: calc(250 / 375 * 100%)")
+        h1.aspect-ratio-box-inside.text-center.text-white.mb-0.pt-4 預約入園
+      .booking.flex-fill.d-flex.flex-column.rounded-top.px-3(v-if="!_.isNil(order)")
+        .booking-progress.mt-4
+          .booking-progress-bar.d-flex.align-items-center
+            .booking-progress-circle.rounded-circle.finished
+            .booking-progress-line.flex-fill.finished
+            .booking-progress-circle.rounded-circle.finished
+            .booking-progress-line.flex-fill.finished
+            .booking-progress-circle.rounded-circle.finished
+          .booking-progress-labels.d-flex.justify-content-between.text-center
+            .booking-progress-label.finished 入園資訊
+            .booking-progress-label.finished 聯絡資訊
+            .booking-progress-label.finished 完成
+        img.mt-3.d-block.mx-auto(src="https://i.imgur.com/9leS3en.png", style="height: 88px; width: 88px")
+        h3.text-center.mt-3.text-blue 入園預約成功
+        p.text-gray.mb-0.mt-2 入園日期：{{order.date}}
+        p.text-gray.mb-0.mt-2(v-if="order.tickets.normal") 全&emsp;票： {{ order.tickets.normal }} 張 #[small.text-gray-light (一般民眾)]
+        p.text-gray.mb-0.mt-2(v-if="order.tickets.student") 優待票： {{ order.tickets.student }} 張 #[small.text-gray-light (學生或7~12歲兒童)]
+        p.text-gray.mb-0.mt-2(v-if="order.tickets.freeOld") 免費票： {{ order.tickets.freeOld }} 張 #[small.text-gray-light (長者或愛心及陪伴者)]
+        p.text-gray.mb-0.mt-2(v-if="order.tickets.free6") 免費票： {{ order.tickets.free6 }} 張 #[small.text-gray-light (6歲以下幼童)]
+        p.text-gray.mb-0.mt-2(v-if="order.tickets.freeOther") 免費票： {{ order.tickets.freeOther }} 張 #[small.text-gray-light (其他)]
+        .hr-dotted.mt-2
+        p.text-gray.mb-0.mt-2 姓名：{{ order.ctx.name}}
+        p.text-gray.mb-0.mt-2 電話：{{ order.ctx.phone}}
+        p.text-gray.mb-0.mt-2 Email：{{ order.ctx.email}}
+        .mt-auto.mb-3
+          a.btn.btn-lg.btn-primary.btn-block.mt-3(href="page-1-9.html") 設施預約
+
+block script
+  script.
+    window.vm = new Vue({
+      el: '#app',
+      data: {
+        order: null,
+        h: {},
+      },
+      async mounted () {
+        // 自動儲存功能
+        try {
+          const saved = JSON.parse(localStorage.getItem('tcap'))
+          if (saved) this.$set(this, 'h', { ...this.h, ...saved })
+        } catch (err) {}
+        this.$watch('h', () => {
+          localStorage.setItem('tcap', JSON.stringify(this.h))
+        }, { deep: true })
+
+        this.$set(this, 'order', this.h.submit)
+      },
+    })
