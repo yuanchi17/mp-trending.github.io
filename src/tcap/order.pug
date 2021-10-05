@@ -1,0 +1,59 @@
+extends /layout/tcap
+
+block content
+  #app.container.text-monospace(v-cloak)
+
+block script
+  script.
+    window.vm = new Vue({
+      el: '#app',
+      data: {
+        h: {
+          source: null,
+        },
+      },
+      async mounted () {
+        //- this.showLoading('請稍候', '正在載入網頁')
+        // 自動儲存功能
+        try {
+          const saved = JSON.parse(localStorage.getItem('tcap'))
+          if (saved) this.$set(this, 'h', { ...this.h, ...saved })
+        } catch (err) {}
+        this.$watch('h', () => {
+          localStorage.setItem('tcap', JSON.stringify(this.h))
+        }, { deep: true })
+
+        try {} catch (err) {
+          console.error(err)
+          await Swal.fire({ icon: 'error', title: '網頁讀取失敗', text: err.message })
+        }
+      },
+      computed: {
+        source () {
+          if (!this.h.source) this.h.source = this.param('source')
+          return this.h.source || '未知'
+        },
+      },
+      methods: {
+        showLoading (title, text) {
+          Swal.fire({
+            title,
+            text,
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            willOpen: () => { Swal.showLoading() },
+          })
+        },
+        isLoading () {
+          return Swal.isVisible() && Swal.isLoading()
+        },
+        hideLoading () {
+          Swal.close()
+        },
+        param (key, defaultValue) {
+          const val = new URL(location).searchParams.get(key)
+          return _.isNil(val) ? defaultValue : val
+        },
+      },
+    })
+
