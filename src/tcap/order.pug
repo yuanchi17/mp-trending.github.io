@@ -1,16 +1,108 @@
 extends /layout/tcap
 
 block content
-  #app.container.text-monospace(v-cloak)
+  #app.container.my-4.text-monospace(v-cloak)
+    #page-list(v-if="page === 'list'")
+      h3.text-center 預約紀錄
+      .card.my-2(v-for="list of lists" :key="list.date")
+        .card-body
+          .d-flex(@click="list.extend = !list.extend")
+            h5.card-title.m-0.my-auto 入園證明
+            span.mx-1.ml-auto {{ list.date }}
+          template(v-if="list.extend")
+            ul.list-group.list-group-flush
+              li.list-group-item.px-0 預定票數
+                .pl-2
+                  .d-flex
+                    small.my-1(v-if="list.type.normal") 全票
+                    small.mx-1.ml-auto {{list.type.normal}} 張
+                  .d-flex
+                    small.my-1(v-if="list.type.student") 優待票（學生或 7~12 歲兒童）
+                    small.mx-1.ml-auto {{list.type.student}} 張
+                  .d-flex
+                    small.my-1(v-if="list.type.freeOld") 免費票（長者或愛心及陪伴者）
+                    small.mx-1.ml-auto {{list.type.freeOld}} 張
+                  .d-flex
+                    small.my-1(v-if="list.type.free6") 免費票（6 歲以下兒童）
+                    small.mx-1.ml-auto {{list.type.free6}} 張
+                  .d-flex
+                    small.my-1(v-if="list.type.freeOther") 免費票（其他）
+                    small.mx-1.ml-auto {{list.type.freeOther}} 張
+              li.list-group-item.px-0 聯絡資訊
+                .d-flex.flex-column.pl-2
+                  small.my-1 姓名: {{ list.ctx.name }}
+                  small.my-1 電話: {{ list.ctx.phone }}
+                  small.my-1 電子郵件: {{ list.ctx.email }}
+            .d-flex.mx-n1.my-2
+              button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-danger(type="button", @click="page = 'order'") 確認入園
+              button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-success(type="button", @click="page = 'order'") 預約設施
+            .d-flex.mx-n1.my-2
+              button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-primary(type="button", @click="page = 'share'") 分享票券
+              button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-primary(type="button", @click="page = 'order'") 取消預約
+          .d-flex.mx-n1.mt-2(v-else)
+            button.btn.btn-sm.btn-block.btn-outline-primary.mx-1.my-0(type="button", @click="list.extend = !list.extend") 詳細資料
+            button.btn.btn-sm.btn-block.btn-outline-success.mx-1.my-0(type="button", @click="page = 'order'") 預約設施
+    #page-detail(v-else-if="page === 'detail'")
+      h3.text-center 入園證明
+      .card.my-2
+        .card-body.pb-0
+          h5.card-title.m-0.my-auto 入園日期 2021.10.15
+          ul.list-group.list-group-flush
+            li.list-group-item.px-0 票券數量
+              .d-flex.flex-column.pl-2
+                small.my-1 全票：3 張
+                small.my-1 免費票（6 歲以下兒童）：1 張
+                small.my-1 合計 180 元
+            li.list-group-item.px-0 聯絡資訊
+              .d-flex.flex-column.pl-2
+                small.my-1 姓名: XXX
+                small.my-1 電話: 09********
+                small.my-1 電子郵件: yuan.chi@xxxxxx.com.tw
+      .d-flex.mx-n1.my-2
+        button.btn.btn-sm.btn-block.btn-outline-primary.mx-1.my-0(type="button", @click="page = 'share'") 分享票券
+        button.btn.btn-sm.btn-block.btn-outline-primary.mx-1.my-0(type="button", @click="page = 'order'") 入園簽到
+      .d-flex.mx-n1.my-2
+        button.btn.btn-sm.btn-block.btn-outline-primary.mx-1.my-0(type="button", @click="page = 'order'") 預約設施
+        button.btn.btn-sm.btn-block.btn-outline-primary.mx-1.my-0(type="button", @click="page = 'order'") 取消預約
+      button.btn.btn-sm.btn-block.btn-outline-primary(type="button", @click="page = 'list'") 回訂單查詢
 
 block script
   script.
     window.vm = new Vue({
       el: '#app',
       data: {
-        h: {
-          source: null,
-        },
+        page: 'list',
+        lists: [
+          {
+            date: '2021-10-15',
+            extend: true,
+            type: {
+              normal: 3,
+              student: 2,
+              free6: 1,
+              freeOld: 1,
+              freeOther: 1,
+            },
+            ctx: {
+              name: 'xxx',
+              phone: '09********',
+              email: 'xxxxx@xxxx.com.tw',
+            },
+          },
+          {
+            date: '2021-11-15',
+            extend: false,
+            type: {
+              normal: 3,
+              free: 2,
+            },
+            ctx: {
+              name: 'yyy',
+              phone: '09********',
+              email: 'xxxxx@xxxx.com.tw',
+            },
+          },
+        ],
       },
       async mounted () {
         //- this.showLoading('請稍候', '正在載入網頁')
