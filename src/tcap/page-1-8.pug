@@ -1,0 +1,32 @@
+extends /layout/tcap
+
+block style
+  meta(property="og:url", content=`${baseurl}tcap/`)
+
+block content
+  #app(v-cloak)
+    .container.d-flex.flex-column.min-vh-100
+      h1.my-3.text-center 填寫聯絡資料
+      .form-group
+        label(for="name") 姓名
+        input.form-control#name(type="text")
+      .form-group
+        label(for="tel") 電話
+        input.form-control#tel(type="tel")
+      .form-group
+        label(for="email") E-mail
+        input.form-control#email(type="email")
+      .mt-auto.mb-3
+        button.btn.btn-primary.btn-block.mt-3(type="button", @click="btnSubmit") 完成預約
+
+block script
+  script.
+    window.vm = new Vue({
+      el: '#app',
+      methods: {
+        async btnSubmit () {
+          await Swal.fire({ icon: 'success', title: '預約成功' })
+          location.href = 'page-1-9.html'
+        },
+      },
+    })

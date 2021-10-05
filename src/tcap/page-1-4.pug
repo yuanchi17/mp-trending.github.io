@@ -1,0 +1,12 @@
+extends /layout/tcap
+
+block style
+  meta(property="og:url", content=`${baseurl}tcap/`)
+
+block content
+  #app
+    .container.d-flex.flex-column.min-vh-100
+      h2.my-3.text-center 預約紀錄
+      p 這裡是您的預約紀錄，若需要安排新的行程，快點選「新增預約」或「預約設施」來安排行程吧!!!
+      .mt-auto.mb-3
+        a.btn.btn-primary.btn-block.mt-3(href=`${baseurl}tcap/page-1-6.html`) 新增預約

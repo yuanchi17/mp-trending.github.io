@@ -1,0 +1,16 @@
+extends /layout/tcap
+
+block style
+  meta(property="og:url", content=`${baseurl}tcap/`)
+
+block content
+  #app
+    .container.d-flex.flex-column.min-vh-100
+      h2.my-3.text-center 預約規則
+      ol.mt-3
+        li 請依預約場次於開場前二十分鐘至五分鐘內，全員到齊完成報到程序，逾時視同放棄。
+        li 兒童身高限制在90-150以內，需要成年人陪同。
+        li 入場前請詳細閱讀場地使用限制與安全事項。
+      .row.mt-auto.mb-3
+        .col: a.btn.btn-lg.btn-block.btn-primary.mt-3(href=`${baseurl}tcap/page-1-7.html`) 同意
+        .col: a.btn.btn-lg.btn-block.btn-secondary.mt-3(href=`${baseurl}tcap/page-1-4.html`) 不同意
