@@ -18,6 +18,7 @@ module.exports = {
     gtag: 'readonly',
     JSON5: 'readonly',
     liff: 'readonly',
+    moment: 'readonly',
     Papa: 'readonly',
     Qs: 'readonly',
     Swal: 'readonly',

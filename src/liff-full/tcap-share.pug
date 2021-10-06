@@ -1,0 +1,106 @@
+extends /layout/liff
+
+block beforehtml
+  -
+    title = '臺北市立兒童新樂園'
+    description = '臺北市立兒童新樂園。'
+
+block style
+  meta(property="og:url", content=`https://liff.line.me/${liffidTcap}/tcap-share.html`)
+
+block script
+  include /component/helpers.pug
+  script.
+    const loginPromise = (async () => {
+      await liff.init({ liffId: '#{liffidTcap}' })
+      if (!liff.isLoggedIn()) {
+        liff.login({ redirectUri: location.href })
+        return await new Promise(resolve => {}) // 永遠不會結束的 Promise
+      }
+      let profile = {}
+      try {
+        profile = await liff.getProfile()
+        gtag('set', 'user_id', profile.userId)
+      } catch (err) {
+        console.error(window.errToPlainObj(err))
+      }
+      return profile
+    })()
+    window.vm = new Vue({
+      el: '#app',
+      data: {},
+      async mounted () {
+        try {
+          // 儲存 redirect 參數
+          const redirect = this.paramBase64url('redirect')
+          if (redirect) localStorage.setItem('tcap-redirect', redirect)
+
+          await this.initTpl()
+          await this.init()
+        } catch (err) {
+          console.error(window.errToPlainObj(err))
+          await Swal.fire({ icon: 'error', title: '網頁讀取失敗', text: err.message })
+        }
+      },
+      methods: {
+        async init () {
+          await this.btnShare()
+          const redirect = localStorage.getItem('tcap-redirect') || '/tcap/order.html'
+          localStorage.removeItem('tcap-redirect')
+          location.href = `${location.origin}${redirect}`
+          return await new Promise(resolve => {}) // 不會結束的 Promise
+        },
+        async initTpl () {
+          const tpl = '/tpl/tcap-share.txt'
+          const render = _.template(_.get(await axios.get(tpl, {
+            params: { cachebust: Date.now() },
+            transformResponse: [],
+          }), 'data'))
+          this.render = options => render({ _, dayjs, Qs, ...options })
+        },
+        async btnShare () {
+          try {
+            this.showLoading('請稍候', '正在開啟分享畫面')
+            if (!liff.isApiAvailable('shareTargetPicker')) throw new Error('您的裝置不支援此功能，請嘗試重新開啟此頁面或更新應用程式版本。')
+            const profile = await loginPromise
+            const msgs = this.getRenderedMsgs({
+              profile,
+              url: new URL(`${location.origin}/tcap/bind.html`),
+            })
+            const beforeShare = Date.now()
+            const res = await liff.shareTargetPicker(msgs)
+            const afterShare = Date.now()
+            if (afterShare - beforeShare > 1000 && _.get(res, 'status') !== 'success') throw new Error('您已取消分享')
+            await Swal.fire({ icon: 'success', title: '分票成功', text: '祝你們玩得愉快' })
+          } catch (err) {
+            err.message = _.get(err, 'response.data.message', err.message)
+            console.error(window.errToPlainObj(err))
+            await Swal.fire({ icon: 'error', title: '分票失敗', text: err.message })
+          }
+        },
+        getRenderedMsgs (options) {
+          let msg = this.render(options)
+          console.log(msg)
+          msg = JSON5.parse(msg)
+          if (_.includes(['bubble', 'carousel'], _.get(msg, 'type'))) {
+            msg = { type: 'flex', altText: this.$t('flexAltText'), contents: msg }
+          }
+          msg = _.castArray(msg)
+          return msg
+        },
+        paramBase64url (key, defaultValue) {
+          const val = new URL(location).searchParams.get(key)
+          return _.isNil(val) ? defaultValue : window.decodeBase64url(val)
+        },
+        showLoading (title, text) {
+          Swal.fire({
+            title,
+            text,
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            willOpen: () => { Swal.showLoading() },
+          })
+        },
+      },
+    })
+

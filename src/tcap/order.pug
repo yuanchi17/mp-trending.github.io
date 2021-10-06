@@ -38,17 +38,17 @@ block content
                 button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-danger(type="button", @click="btnCheckin(oId)") 確認入園
                 button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-success(type="button", @click="page = 'game-list'") 預約設施
               .d-flex.mx-n1.my-2
-                button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-primary(type="button", @click="page = 'share'") 分享票券
+                button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-primary(type="button", @click="btnShare") 分享票券
                 button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-primary(type="button", @click="page = 'order'") 取消預約
             template(v-else-if="order.status === 'early'")
               .d-flex.mx-n1.my-2
                 button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-success(type="button", @click="page = 'game-list'") 預約設施
               .d-flex.mx-n1.my-2
-                button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-primary(type="button", @click="page = 'share'") 分享票券
+                button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-primary(type="button", @click="btnShare") 分享票券
                 button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-primary(type="button", @click="page = 'order'") 取消預約
             template(v-else-if="order.status === 'checked'")
               .d-flex.mx-n1.my-2
-                button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-primary(type="button", @click="page = 'share'") 分享票券
+                button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-primary(type="button", @click="btnShare") 分享票券
                 button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-success(type="button", @click="page = 'game-list'") 預約設施
             template(v-else-if="order.status === 'expired'")
               button.mx-1.my-0.btn.btn-sm.btn-block.btn-secondary(type="button", disabled) 已過期
@@ -72,7 +72,7 @@ block content
                 small.my-1 電話: 09********
                 small.my-1 電子郵件: yuan.chi@xxxxxx.com.tw
       .d-flex.mx-n1.my-2
-        button.btn.btn-sm.btn-block.btn-outline-primary.mx-1.my-0(type="button", @click="page = 'share'") 分享票券
+        button.btn.btn-sm.btn-block.btn-outline-primary.mx-1.my-0(type="button", @click="btnShare") 分享票券
         button.btn.btn-sm.btn-block.btn-outline-primary.mx-1.my-0(type="button", @click="page = 'order'") 入園簽到
       .d-flex.mx-n1.my-2
         button.btn.btn-sm.btn-block.btn-outline-primary.mx-1.my-0(type="button", @click="page = 'game-list'") 預約設施
@@ -135,10 +135,9 @@ block script
               },
             },
           ],
-        }
+        },
       },
       async mounted () {
-        //- this.showLoading('請稍候', '正在載入網頁')
         // 自動儲存功能
         try {
           const saved = JSON.parse(localStorage.getItem('tcap'))
@@ -147,11 +146,6 @@ block script
         this.$watch('h', () => {
           localStorage.setItem('tcap', JSON.stringify(this.h))
         }, { deep: true })
-
-        try {} catch (err) {
-          console.error(err)
-          await Swal.fire({ icon: 'error', title: '網頁讀取失敗', text: err.message })
-        }
       },
       computed: {
         source () {
@@ -165,7 +159,7 @@ block script
             ...order,
             ...this.cpuOrderStatus({ now, order }),
           }))
-        }
+        },
       },
       methods: {
         cpuOrderStatus ({ now, order }) {
@@ -197,6 +191,12 @@ block script
             text: '祝您玩得愉快',
             title: '入園成功',
           })
+        },
+        async btnShare () {
+          const url = new URL('https://liff.line.me/#{liffidTcap}')
+          url.searchParams.set('redirect', window.encodeBase64url('/tcap/order.html'))
+          location.href = url.href
+          return await new Promise(resolve => {}) // 不會結束的 Promise
         },
         showLoading (title, text) {
           Swal.fire({
