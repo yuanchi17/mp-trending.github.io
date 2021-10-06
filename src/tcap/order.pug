@@ -4,44 +4,57 @@ block content
   #app.container.my-4.text-monospace(v-cloak)
     #page-list(v-if="page === 'list'")
       h3.text-center 預約紀錄
-      .card.my-2(v-for="list of lists" :key="list.date")
+      .card.my-2(v-for="(order, oId) of orders" :key="order.date")
         .card-body
-          .d-flex(@click="list.extend = !list.extend")
+          .d-flex(@click="h.orders[oId].extend = !h.orders[oId].extend")
             h5.card-title.m-0.my-auto 入園證明
-            span.mx-1.ml-auto {{ list.date }}
-          template(v-if="list.extend")
+            span.mx-1.ml-auto {{ order.date }}
+          template(v-if="order.extend")
             ul.list-group.list-group-flush
               li.list-group-item.px-0 預定票數
                 .pl-2
-                  .d-flex
-                    small.my-1(v-if="list.type.normal") 全票
-                    small.mx-1.ml-auto {{list.type.normal}} 張
-                  .d-flex
-                    small.my-1(v-if="list.type.student") 優待票（學生或 7~12 歲兒童）
-                    small.mx-1.ml-auto {{list.type.student}} 張
-                  .d-flex
-                    small.my-1(v-if="list.type.freeOld") 免費票（長者或愛心及陪伴者）
-                    small.mx-1.ml-auto {{list.type.freeOld}} 張
-                  .d-flex
-                    small.my-1(v-if="list.type.free6") 免費票（6 歲以下兒童）
-                    small.mx-1.ml-auto {{list.type.free6}} 張
-                  .d-flex
-                    small.my-1(v-if="list.type.freeOther") 免費票（其他）
-                    small.mx-1.ml-auto {{list.type.freeOther}} 張
+                  .d-flex(v-if="order.type.normal")
+                    small.my-1 全票
+                    small.mx-1.ml-auto {{order.type.normal}} 張
+                  .d-flex(v-if="order.type.student")
+                    small.my-1 優待票（學生或 7~12 歲兒童）
+                    small.mx-1.ml-auto {{order.type.student}} 張
+                  .d-flex(v-if="order.type.freeOld")
+                    small.my-1 免費票（長者或愛心及陪伴者）
+                    small.mx-1.ml-auto {{order.type.freeOld}} 張
+                  .d-flex(v-if="order.type.free6")
+                    small.my-1 免費票（6 歲以下兒童）
+                    small.mx-1.ml-auto {{order.type.free6}} 張
+                  .d-flex(v-if="order.type.freeOther")
+                    small.my-1 免費票（其他）
+                    small.mx-1.ml-auto {{order.type.freeOther}} 張
               li.list-group-item.px-0 聯絡資訊
                 .d-flex.flex-column.pl-2
-                  small.my-1 姓名: {{ list.ctx.name }}
-                  small.my-1 電話: {{ list.ctx.phone }}
-                  small.my-1 電子郵件: {{ list.ctx.email }}
-            .d-flex.mx-n1.my-2
-              button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-danger(type="button", @click="page = 'order'") 確認入園
-              button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-success(type="button", @click="page = 'order'") 預約設施
-            .d-flex.mx-n1.my-2
-              button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-primary(type="button", @click="page = 'share'") 分享票券
-              button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-primary(type="button", @click="page = 'order'") 取消預約
+                  small.my-1 姓名: {{ order.ctx.name }}
+                  small.my-1 電話: {{ order.ctx.phone }}
+                  small.my-1 電子郵件: {{ order.ctx.email }}
+            template(v-if="order.status === 'normal'")
+              .d-flex.mx-n1.my-2
+                button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-danger(type="button", @click="btnCheckin(oId)") 確認入園
+                button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-success(type="button", @click="page = 'game-list'") 預約設施
+              .d-flex.mx-n1.my-2
+                button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-primary(type="button", @click="page = 'share'") 分享票券
+                button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-primary(type="button", @click="page = 'order'") 取消預約
+            template(v-else-if="order.status === 'early'")
+              .d-flex.mx-n1.my-2
+                button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-success(type="button", @click="page = 'game-list'") 預約設施
+              .d-flex.mx-n1.my-2
+                button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-primary(type="button", @click="page = 'share'") 分享票券
+                button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-primary(type="button", @click="page = 'order'") 取消預約
+            template(v-else-if="order.status === 'checked'")
+              .d-flex.mx-n1.my-2
+                button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-primary(type="button", @click="page = 'share'") 分享票券
+                button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-success(type="button", @click="page = 'game-list'") 預約設施
+            template(v-else-if="order.status === 'expired'")
+              button.mx-1.my-0.btn.btn-sm.btn-block.btn-secondary(type="button", disabled) 已過期
           .d-flex.mx-n1.mt-2(v-else)
-            button.btn.btn-sm.btn-block.btn-outline-primary.mx-1.my-0(type="button", @click="list.extend = !list.extend") 詳細資料
-            button.btn.btn-sm.btn-block.btn-outline-success.mx-1.my-0(type="button", @click="page = 'order'") 預約設施
+            button.btn.btn-sm.btn-block.btn-outline-primary.mx-1.my-0(type="button", @click="h.orders[oId].extend = !h.orders[oId].extend") 詳細資料
+            button.btn.btn-sm.btn-block.btn-outline-success.mx-1.my-0(type="button", @click="page = 'order'", v-if="order.status !== 'expired'") 預約設施
     #page-detail(v-else-if="page === 'detail'")
       h3.text-center 入園證明
       .card.my-2
@@ -62,7 +75,7 @@ block content
         button.btn.btn-sm.btn-block.btn-outline-primary.mx-1.my-0(type="button", @click="page = 'share'") 分享票券
         button.btn.btn-sm.btn-block.btn-outline-primary.mx-1.my-0(type="button", @click="page = 'order'") 入園簽到
       .d-flex.mx-n1.my-2
-        button.btn.btn-sm.btn-block.btn-outline-primary.mx-1.my-0(type="button", @click="page = 'order'") 預約設施
+        button.btn.btn-sm.btn-block.btn-outline-primary.mx-1.my-0(type="button", @click="page = 'game-list'") 預約設施
         button.btn.btn-sm.btn-block.btn-outline-primary.mx-1.my-0(type="button", @click="page = 'order'") 取消預約
       button.btn.btn-sm.btn-block.btn-outline-primary(type="button", @click="page = 'list'") 回訂單查詢
 
@@ -72,37 +85,57 @@ block script
       el: '#app',
       data: {
         page: 'list',
-        lists: [
-          {
-            date: '2021-10-15',
-            extend: true,
-            type: {
-              normal: 3,
-              student: 2,
-              free6: 1,
-              freeOld: 1,
-              freeOther: 1,
+        h: {
+          orders: [
+            {
+              checkin: false,
+              date: '2021-10-04',
+              extend: true,
+              type: {
+                normal: 3,
+                student: 2,
+                free6: 1,
+                freeOld: 1,
+                freeOther: 1,
+              },
+              ctx: {
+                name: 'xxx',
+                phone: '09********',
+                email: 'xxxxx@xxxx.com.tw',
+              },
             },
-            ctx: {
-              name: 'xxx',
-              phone: '09********',
-              email: 'xxxxx@xxxx.com.tw',
+            {
+              checkin: false,
+              date: '2021-10-06',
+              extend: true,
+              type: {
+                normal: 3,
+                student: 2,
+                free6: 1,
+                freeOther: 1,
+              },
+              ctx: {
+                name: 'xxx',
+                phone: '09********',
+                email: 'xxxxx@xxxx.com.tw',
+              },
             },
-          },
-          {
-            date: '2021-11-15',
-            extend: false,
-            type: {
-              normal: 3,
-              free: 2,
+            {
+              checkin: false,
+              date: '2021-11-15',
+              extend: false,
+              type: {
+                normal: 3,
+                free6: 2,
+              },
+              ctx: {
+                name: 'yyy',
+                phone: '09********',
+                email: 'xxxxx@xxxx.com.tw',
+              },
             },
-            ctx: {
-              name: 'yyy',
-              phone: '09********',
-              email: 'xxxxx@xxxx.com.tw',
-            },
-          },
-        ],
+          ],
+        }
       },
       async mounted () {
         //- this.showLoading('請稍候', '正在載入網頁')
@@ -125,8 +158,46 @@ block script
           if (!this.h.source) this.h.source = this.param('source')
           return this.h.source || '未知'
         },
+        orders () {
+          const now = moment()
+          if (!this.h.orders) return []
+          return _.map(this.h.orders, order => ({
+            ...order,
+            ...this.cpuOrderStatus({ now, order }),
+          }))
+        }
       },
       methods: {
+        cpuOrderStatus ({ now, order }) {
+          const total = _.sum(_.values(order.type))
+          const date = moment(order.date)
+          const expired = date.clone().add(1, 'day')
+          if (order.checkin) return { total, status: 'checked' } // 已入園
+          if (now > expired) return { total, status: 'expired' } // 已過期
+          if (date < now) return { total, status: 'normal' } // 待入園
+          return { total, status: 'early' } // 不可入園
+        },
+        async btnCheckin (id) {
+          const result = await Swal.fire({
+            cancelButtonText: '取消',
+            denyButtonText: '入園',
+            icon: 'warning',
+            showCancelButton: true,
+            showConfirmButton: false,
+            showDenyButton: true,
+            text: '點擊「入園」後，即認定您已入園',
+            title: '請由工作人員操作',
+          })
+          if (!result.isDenied) return
+
+          this.$set(this.h.orders[id], 'checkin', true)
+          await Swal.fire({
+            confirmButtonText: '確定',
+            icon: 'success',
+            text: '祝您玩得愉快',
+            title: '入園成功',
+          })
+        },
         showLoading (title, text) {
           Swal.fire({
             title,
