@@ -20,6 +20,7 @@ exports.build = async () => {
     ..._.fromPairs(_.map([
       'LIFFID_FULL',
       'LIFFID_TCAP',
+      'LINEAT_OA_ID',
     ], k => [_.camelCase(k), getenv(k)])),
   }
 

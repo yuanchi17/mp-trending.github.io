@@ -1,38 +1,40 @@
 extends /layout/tcap
 
+block style
+  meta(property="og:url", content=`${baseurl}tcap/`)
+
 block content
   #app.container.my-4.text-monospace(v-cloak)
-    h3.text-center 取得分享票券
+    h3.text-center 取得預約資格
     p.text-center 恭喜您取得預約設施資格，點選「預約設施」即可安排當天的玩樂行程。
     .card.my-2
-      .card-body.pb-0
-        .d-flex
-          h5.card-title.m-0.my-auto 入園證明
-          span.mx-1.ml-auto {{ order.date }}
+      .card-body.py-0
         ul.list-group.list-group-flush
+          li.d-flex.list-group-item.px-0 入園日期
+            small.ml-auto {{ order.date }}
           li.list-group-item.px-0 預定票數
             .pl-2
               .d-flex(v-if="order.tickets.normal")
-                small.my-1 全票
+                small.my-1 全票 - NT$30
                 small.mx-1.ml-auto {{order.tickets.normal}} 張
               .d-flex(v-if="order.tickets.student")
-                small.my-1 優待票（學生或 7~12 歲兒童）
+                small.my-1 優待票（學生或 7~12 歲兒童）- NT$15
                 small.mx-1.ml-auto {{order.tickets.student}} 張
               .d-flex(v-if="order.tickets.freeOld")
-                small.my-1 免費票（長者或愛心及陪伴者）
+                small.my-1 免費票（長者或愛心及陪伴者）- NT$0
                 small.mx-1.ml-auto {{order.tickets.freeOld}} 張
               .d-flex(v-if="order.tickets.free6")
-                small.my-1 免費票（6 歲以下兒童）
+                small.my-1 免費票（6 歲以下兒童）- NT$0
                 small.mx-1.ml-auto {{order.tickets.free6}} 張
               .d-flex(v-if="order.tickets.freeOther")
-                small.my-1 免費票（其他）
+                small.my-1 免費票（其他）- NT$0
                 small.mx-1.ml-auto {{order.tickets.freeOther}} 張
           li.list-group-item.px-0 聯絡資訊
             .d-flex.flex-column.pl-2
               small.my-1 姓名: {{ order.ctx.name }}
               small.my-1 電話: {{ order.ctx.phone }}
               small.my-1 電子郵件: {{ order.ctx.email }}
-          button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-success(type="button", @click="btnOrderNew2") 預約設施
+    a.my-0.btn.btn-sm.btn-block.btn-outline-success(href=`${baseurl}tcap/page-1-8.html`) 預約設施
 
 block script
   script.
@@ -55,12 +57,6 @@ block script
             phone: '09********',
             email: 'xxxxx@xxxx.com.tw',
           },
-        },
-      },
-      async mounted () {},
-      methods: {
-        async btnOrderNew2 () {
-          location.href = 'order_new2.html'
         },
       },
     })

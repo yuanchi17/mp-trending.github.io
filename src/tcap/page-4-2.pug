@@ -1,0 +1,12 @@
+extends /layout/tcap
+
+block style
+  meta(property="og:url", content=`${baseurl}tcap/`)
+
+block content
+  #app
+    .container.d-flex.flex-column.min-vh-100
+      h2.my-3.text-center 取消入園預約成功
+      .mt-auto.mb-3
+        a.btn.btn-primary.btn-block.my-2(href=`${baseurl}tcap/page-1-6.html`) 新增預約
+        a.btn.btn-primary.btn-block.my-2(target="_blank", href=`https://line.me/R/ti/p/${LINEAT_OA_ID}`) 加入 LINE 官方帳號

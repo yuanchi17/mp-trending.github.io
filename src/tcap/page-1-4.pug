@@ -4,9 +4,104 @@ block style
   meta(property="og:url", content=`${baseurl}tcap/`)
 
 block content
-  #app
+  #app.text-monospace
     .container.d-flex.flex-column.min-vh-100
       h2.my-3.text-center 預約紀錄
       p 這裡是您的預約紀錄，若需要安排新的行程，快點選「新增預約」或「預約設施」來安排行程吧!!!
+      .card.my-2(v-for="(order, oId) of orders" :key="order.date")
+        .card-body
+          .d-flex
+            h5.card-title.m-0.my-auto {{ order.date }}
+            span.mx-1.ml-auto {{ order.total }} 人
+          .d-flex.mx-n1.mt-2
+            a.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-primary(href=`${baseurl}tcap/page-3-1.html`) 詳細資訊
+            a.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-success(href=`${baseurl}tcap/page-1-8.html`, v-if="order.status !== 'expired'") 預約設施
       .mt-auto.mb-3
         a.btn.btn-primary.btn-block.mt-3(href=`${baseurl}tcap/page-1-6.html`) 新增預約
+
+block script
+  script.
+    window.vm = new Vue({
+      el: '#app',
+      data: {
+        h: {
+          orders: [
+            {
+              checkin: false,
+              date: '2021-10-04',
+              tickets: {
+                normal: 3,
+                student: 2,
+                free6: 1,
+                freeOld: 1,
+                freeOther: 1,
+              },
+              ctx: {
+                name: 'xxx',
+                phone: '09********',
+                email: 'xxxxx@xxxx.com.tw',
+              },
+            },
+            {
+              checkin: false,
+              date: '2021-10-07',
+              tickets: {
+                normal: 3,
+                student: 2,
+                free6: 1,
+                freeOther: 1,
+              },
+              ctx: {
+                name: 'xxx',
+                phone: '09********',
+                email: 'xxxxx@xxxx.com.tw',
+              },
+            },
+            {
+              checkin: false,
+              date: '2021-11-15',
+              tickets: {
+                normal: 3,
+                free6: 2,
+              },
+              ctx: {
+                name: 'yyy',
+                phone: '09********',
+                email: 'xxxxx@xxxx.com.tw',
+              },
+            },
+          ],
+        },
+      },
+      async mounted () {
+        // 自動儲存功能
+        try {
+          const saved = JSON.parse(localStorage.getItem('tcap'))
+          if (saved) this.$set(this, 'h', { ...this.h, ...saved })
+        } catch (err) {}
+        this.$watch('h', () => {
+          localStorage.setItem('tcap', JSON.stringify(this.h))
+        }, { deep: true })
+      },
+      computed: {
+        orders () {
+          const now = moment()
+          if (!this.h.orders) return []
+          return _.map(this.h.orders, order => ({
+            ...order,
+            ...this.cpuOrderStatus({ now, order }),
+          }))
+        },
+      },
+      methods: {
+        cpuOrderStatus ({ now, order }) {
+          const total = _.sum(_.values(order.tickets))
+          const date = moment(order.date)
+          const expired = date.clone().add(1, 'day')
+          if (order.checkin) return { total, status: 'checked' } // 已入園
+          if (now > expired) return { total, status: 'expired' } // 已過期
+          if (date < now) return { total, status: 'normal' } // 待入園
+          return { total, status: 'early' } // 不可入園
+        },
+      },
+    })
