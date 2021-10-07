@@ -1,0 +1,211 @@
+extends /layout/tcap
+
+block content
+  #app.container.my-4.text-monospace(v-cloak)
+    h3.text-center 預約紀錄
+    .card.my-2(v-for="(order, oId) of orders" :key="order.date")
+      .card-body
+        .d-flex(@click="h.orders[oId].extend = !h.orders[oId].extend")
+          h5.card-title.m-0.my-auto 入園證明
+          span.mx-1.ml-auto {{ order.date }}
+        template(v-if="order.extend")
+          ul.list-group.list-group-flush
+            li.list-group-item.px-0 預定票數
+              .pl-2
+                .d-flex(v-if="order.tickets.normal")
+                  small.my-1 全票
+                  small.mx-1.ml-auto {{order.tickets.normal}} 張
+                .d-flex(v-if="order.tickets.student")
+                  small.my-1 優待票（學生或 7~12 歲兒童）
+                  small.mx-1.ml-auto {{order.tickets.student}} 張
+                .d-flex(v-if="order.tickets.freeOld")
+                  small.my-1 免費票（長者或愛心及陪伴者）
+                  small.mx-1.ml-auto {{order.tickets.freeOld}} 張
+                .d-flex(v-if="order.tickets.free6")
+                  small.my-1 免費票（6 歲以下兒童）
+                  small.mx-1.ml-auto {{order.tickets.free6}} 張
+                .d-flex(v-if="order.tickets.freeOther")
+                  small.my-1 免費票（其他）
+                  small.mx-1.ml-auto {{order.tickets.freeOther}} 張
+            li.list-group-item.px-0 聯絡資訊
+              .d-flex.flex-column.pl-2
+                small.my-1 姓名: {{ order.ctx.name }}
+                small.my-1 電話: {{ order.ctx.phone }}
+                small.my-1 電子郵件: {{ order.ctx.email }}
+          template(v-if="order.status === 'normal'")
+            .d-flex.mx-n1.mt-2
+              button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-danger(type="button", @click="btnCheckin(oId)") 確認入園
+              button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-success(type="button", @click="btnOrderNew2") 預約設施
+            .d-flex.mx-n1.mt-2
+              button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-primary(type="button", @click="btnShare") 分享票券
+              button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-primary(type="button", @click="btnOrderDel(oId)") 取消預約
+          template(v-else-if="order.status === 'early'")
+            .d-flex.mx-n1.mt-2
+              button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-success(type="button", @click="btnOrderNew2") 預約設施
+            .d-flex.mx-n1.mt-2
+              button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-primary(type="button", @click="btnShare") 分享票券
+              button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-primary(type="button", @click="btnOrderDel(oId)") 取消預約
+          template(v-else-if="order.status === 'checked'")
+            .d-flex.mx-n1.mt-2
+              button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-primary(type="button", @click="btnShare") 分享票券
+              button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-success(type="button", @click="btnOrderNew2") 預約設施
+          template(v-else-if="order.status === 'expired'")
+            button.mt-2.btn.btn-sm.btn-block.btn-secondary(type="button", disabled) 已過期
+            button.mt-2.btn.btn-sm.btn-block.btn-outline-danger(type="button", @click="btnOrderDel(oId)") 刪除紀錄
+        .d-flex.mx-n1.mt-2(v-else)
+          button.btn.btn-sm.btn-block.btn-outline-primary.mx-1.my-0(type="button", @click="h.orders[oId].extend = !h.orders[oId].extend") 詳細資訊
+          button.btn.btn-sm.btn-block.btn-outline-success.mx-1.my-0(type="button", @click="btnOrderNew2", v-if="order.status !== 'expired'") 預約設施
+    button.btn.btn-sm.btn-block.btn-primary.my-2(type="button", @click="btnOrderNew") 新增預約
+
+block script
+  script.
+    window.vm = new Vue({
+      el: '#app',
+      data: {
+        h: {
+          orders: [
+            {
+              checkin: false,
+              date: '2021-10-04',
+              extend: true,
+              tickets: {
+                normal: 3,
+                student: 2,
+                free6: 1,
+                freeOld: 1,
+                freeOther: 1,
+              },
+              ctx: {
+                name: 'xxx',
+                phone: '09********',
+                email: 'xxxxx@xxxx.com.tw',
+              },
+            },
+            {
+              checkin: false,
+              date: '2021-10-16',
+              extend: true,
+              tickets: {
+                normal: 3,
+                student: 2,
+                free6: 1,
+                freeOther: 1,
+              },
+              ctx: {
+                name: 'xxx',
+                phone: '09********',
+                email: 'xxxxx@xxxx.com.tw',
+              },
+            },
+            {
+              checkin: false,
+              date: '2021-11-15',
+              extend: false,
+              tickets: {
+                normal: 3,
+                free6: 2,
+              },
+              ctx: {
+                name: 'yyy',
+                phone: '09********',
+                email: 'xxxxx@xxxx.com.tw',
+              },
+            },
+          ],
+        },
+      },
+      async mounted () {
+        // 自動儲存功能
+        try {
+          const saved = JSON.parse(localStorage.getItem('tcap'))
+          if (saved) this.$set(this, 'h', { ...this.h, ...saved })
+        } catch (err) {}
+        this.$watch('h', () => {
+          localStorage.setItem('tcap', JSON.stringify(this.h))
+        }, { deep: true })
+      },
+      computed: {
+        orders () {
+          const now = moment()
+          if (!this.h.orders) return []
+          return _.map(this.h.orders, order => ({
+            ...order,
+            ...this.cpuOrderStatus({ now, order }),
+          }))
+        },
+      },
+      methods: {
+        cpuOrderStatus ({ now, order }) {
+          const total = _.sum(_.values(order.tickets))
+          const date = moment(order.date)
+          const expired = date.clone().add(1, 'day')
+          if (order.checkin) return { total, status: 'checked' } // 已入園
+          if (now > expired) return { total, status: 'expired' } // 已過期
+          if (date < now) return { total, status: 'normal' } // 待入園
+          return { total, status: 'early' } // 不可入園
+        },
+        async btnCheckin (id) {
+          const result = await Swal.fire({
+            cancelButtonText: '取消',
+            denyButtonText: '入園',
+            icon: 'warning',
+            showCancelButton: true,
+            showConfirmButton: false,
+            showDenyButton: true,
+            text: '點擊「入園」後，即認定您已入園',
+            title: '請由工作人員操作',
+          })
+          if (!result.isDenied) return
+
+          this.$set(this.h.orders[id], 'checkin', true)
+          await Swal.fire({
+            confirmButtonText: '確定',
+            icon: 'success',
+            text: '祝您玩得愉快',
+            title: '入園成功',
+          })
+        },
+        async btnOrderDel (id) {
+          const order = this.orders[id]
+          const text = order.status === 'expired' ? `是否要刪除 ${order.date} 的入園證明？` : `是否要取消 ${order.date} 的入園預約？`
+          const result = await Swal.fire({
+            cancelButtonColor: '#007bff',
+            cancelButtonText: '否',
+            confirmButtonColor: '#dc3545',
+            confirmButtonText: '是',
+            focusCancel: true,
+            icon: 'warning',
+            showCancelButton: true,
+            text,
+          })
+          if (!result.value) return
+          this.h.orders.splice(id, 1)
+        },
+        async btnShare () {
+          const url = new URL('https://liff.line.me/#{liffidTcap}')
+          url.searchParams.set('redirect', window.encodeBase64url('/tcap/order.html'))
+          location.href = url.href
+          return await new Promise(resolve => {}) // 不會結束的 Promise
+        },
+        async btnOrderNew2 () {
+          location.href = 'order_new2.html'
+        },
+        async btnOrderNew () {
+          const result = await Swal.fire({
+            cancelButtonText: '不同意',
+            confirmButtonText: '同意',
+            focusCancel: true,
+            showCancelButton: true,
+            html: `<ol>
+            <li class='text-left'>請依預約場次於開場前二十分鐘至五分鐘內，全員到齊完成報到程序。</li><br>
+            <li class='text-left'>兒童身高限制在 90-150 以內，需要成年人陪同。</li><br>
+            <li class='text-left'>入場前請詳細閱讀場地使用限制與安全事項。</li>
+            </ol>`,
+            title: '預約規則',
+          })
+          if (!result.value) return
+          location.href = 'order_new1.html'
+        },
+      },
+    })
+
