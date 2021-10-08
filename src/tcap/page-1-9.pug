@@ -9,14 +9,14 @@ block content
       h2.text-center 設施預約清單
       p.mt-3 可點選已預約設施圖片觀看詳細預約資訊
       .row.mt-2
-        .col: a.btn.btn-lg.btn-block.btn-primary(href=`${baseurl}tcap/page-5-1.html`) 分享行程
+        .col: button.btn.btn-lg.btn-block.btn-primary(type="button", @click="btnShare") 分享行程
         .col: a.btn.btn-lg.btn-block.btn-secondary(href=`${baseurl}tcap/page-2-1.html`) 新增預約
       h3.mt-4.text-center 已預約設施
-      .card.mt-3
+      .card.mt-3(@click="location.href = 'page-7-1.html?game=b'")
         .card-body.d-flex.justify-content-between
           span 設施B
           span 09:00
-      .card.mt-3
+      .card.mt-3(@click="location.href = 'page-7-1.html?game=a'")
         .card-body.d-flex.justify-content-between
           span 設施A
           span 12:00
@@ -29,6 +29,12 @@ block script
       methods: {
         async btnAlert () {
           await Swal.fire({ html: '1.請依預約場次於開場前二十分鐘至五分鐘內，全員到齊完成報到程序，逾時視同放棄。<br>2.兒童身高限制在90-150以內，需要成年人陪同。<br>3.入場前請詳細閱讀場地使用限制與安全事項。' })
+        },
+        async btnShare () {
+          const url = new URL('https://liff.line.me/#{liffidTcap}')
+          url.searchParams.set('redirect', window.encodeBase64url('/tcap/page-1-9.html'))
+          location.href = url.href
+          return await new Promise(resolve => {}) // 不會結束的 Promise
         },
       },
     })

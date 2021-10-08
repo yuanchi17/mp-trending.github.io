@@ -1,0 +1,38 @@
+extends /layout/tcap
+
+block style
+  meta(property="og:url", content=`${baseurl}tcap/`)
+
+block content
+  #app.container.my-4.text-monospace
+    h3.text-center 預約證明
+    p.mx-2.text-danger.text-center 本頁面請工作人員點選，如不甚誤觸「確認核銷」，請自行負責
+    .card.my-2
+      .card-body(v-if="param('game') === 'a'")
+        h5.card-title 設施A
+        p.my-2 日期：2021/10/10
+        p.my-2 時間：12:00
+        p.my-2 姓名：XXX
+        p.my-2 成人：2
+        p.my-2 兒童：3
+      .card-body(v-else)
+        h5.card-title 設施B
+        p.my-2 日期：2021/10/10
+        p.my-2 時間：09:00
+        p.my-2 姓名：XXX
+        p.my-2 成人：2
+        p.my-2 兒童：3
+    a.btn.btn-danger.btn-block.my-2(href=`${baseurl}tcap/page-7-2.html`) 確認核銷
+
+block script
+  script.
+    window.vm = new Vue({
+      el: '#app',
+      data: {},
+      methods: {
+        param (key, defaultValue) {
+          const val = new URL(location).searchParams.get(key)
+          return _.isNil(val) ? defaultValue : val
+        },
+      },
+    })
