@@ -14,10 +14,10 @@ block content
             h5.card-title.m-0.my-auto {{ order.date }}
             span.mx-1.ml-auto {{ order.total }} 人
           .d-flex.mx-n1.mt-2
-            a.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-primary(href=`${baseurl}tcap/page-3-1.html`) 詳細資訊
-            a.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-success(href=`${baseurl}tcap/page-1-8.html`, v-if="order.status !== 'expired'") 預約設施
+            a.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-primary(href="page-3-1.html") 詳細資訊
+            a.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-success(href="page-1-8.html", v-if="order.status !== 'expired'") 預約設施
       .mt-auto.mb-3
-        a.btn.btn-primary.btn-block.mt-3(href=`${baseurl}tcap/page-1-6.html`) 新增預約
+        a.btn.btn-secondary.btn-block.mt-3(href="page-1-6.html") 新增預約
 
 block script
   script.

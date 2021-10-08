@@ -1,0 +1,52 @@
+extends /layout/tcap
+
+block style
+  meta(property="og:url", content=`${baseurl}tcap/`)
+
+block content
+  #app(v-cloak)
+    .container.py-3.d-flex.flex-column.min-vh-100
+      h2.text-center 新增預約
+      select.from-control.mt-3
+        option 遊樂設施編號 1~13
+        option 遊樂設施K系列
+        option 遊樂場
+      .radio1.mt-1
+        .custom-control.custom-radio.custom-control-inline
+          input#radio1-0.custom-control-input(type="radio", name="radio1", value="0")
+          label.custom-control-label(for="radio1-0") 未滿 95
+        .custom-control.custom-radio.custom-control-inline
+          input#radio1-95.custom-control-input(type="radio", name="radio1", value="95")
+          label.custom-control-label(for="radio1-95") 未滿 110
+        .custom-control.custom-radio.custom-control-inline
+          input#radio1-110.custom-control-input(type="radio", name="radio1", value="110", checked)
+          label.custom-control-label(for="radio1-110") 全部
+      .card.mt-3
+        .card-body
+          .d-flex.justify-content-between.align-items-center
+            h5.card-title.mb-0 設施 A
+            i.fa.fa-caret-up
+          img.w-100.mt-2(src="https://i.imgur.com/U13byGP.jpeg")
+          p.mt-1 摩天輪直徑40公尺並設有27個座艙，為園區主要地標，可鳥瞰臺北盆地之美景。#[br]★單次票價：30元。#[br]★免費搭乘(需出示證明)：#[br]1. 針對身高未滿85公分或兩歲一下之幼童#[br]2. 身心障礙者。#[br]★搭乘限制：#[br]一、身高未達120公分兒童必須由成人陪同，身高超過195公分請勿搭乘。#[br]二、每一車廂限乘載6人，乘客總重量限450公斤。#[br]三、孕婦、飲酒、高血壓、低血壓、健康狀況不佳及藥物影響，以及患有心臟血管疾病者，請勿搭乘。#[br]四、身心障礙者，基於安全，必須由成人陪同。
+          a.btn.btn-block.btn-lg.btn-secondary(href="page-2-2.html") 新增預約
+      .card.mt-3
+        .card-body
+          .d-flex.justify-content-between.align-items-center
+            h5.card-title.mb-0 設施 B
+            i.fa.fa-caret-down
+      .card.mt-3
+        .card-body
+          .d-flex.justify-content-between.align-items-center
+            h5.card-title.mb-0 設施 C
+            i.fa.fa-caret-down
+      .card.mt-3
+        .card-body
+          .d-flex.justify-content-between.align-items-center
+            h5.card-title.mb-0 設施 D
+            i.fa.fa-caret-down
+
+block script
+  script.
+    window.vm = new Vue({
+      el: '#app',
+    })

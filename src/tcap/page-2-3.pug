@@ -1,0 +1,14 @@
+extends /layout/tcap
+
+block style
+  meta(property="og:url", content=`${baseurl}tcap/`)
+
+block content
+  #app
+    .container.py-3.d-flex.flex-column.min-vh-100
+      h2.text-center 預約成功
+      h3 設施 A
+      p 日期：10/10#[br]時間：14:00#[br]姓名：XXX#[br]成人：2#[br]兒童：2
+      .mt-auto.mb-3
+        a.btn.btn-lg.btn-block.btn-secondary.mt-3(href="page-2-1.html") 新增預約
+        a.btn.btn-lg.btn-block.btn-secondary.mt-3(href="page-1-9.html") 回預約設施清單

@@ -10,17 +10,17 @@ block content
       p.mt-3 可點選已預約設施圖片觀看詳細預約資訊
       .row.mt-2
         .col: button.btn.btn-lg.btn-block.btn-primary(type="button", @click="btnShare") 分享行程
-        .col: a.btn.btn-lg.btn-block.btn-secondary(href=`${baseurl}tcap/page-2-1.html`) 新增預約
+        .col: a.btn.btn-lg.btn-block.btn-secondary(href="page-2-1.html") 新增預約
       h3.mt-4.text-center 已預約設施
-      .card.mt-3(@click="location.href = 'page-7-1.html?game=b'")
+      a(href="page-2-4.html"): .card.mt-3
         .card-body.d-flex.justify-content-between
           span 設施B
           span 09:00
-      .card.mt-3(@click="location.href = 'page-7-1.html?game=a'")
+      a(href="page-2-4.html"): .card.mt-3
         .card-body.d-flex.justify-content-between
           span 設施A
           span 12:00
-      button.btn.btn-lg.btn-block.btn-primary.mt-auto(type="button", @click="btnAlert") 預約須知
+      button.btn.btn-lg.btn-block.btn-secondary.mt-auto(type="button", @click="btnAlert") 預約須知
 
 block script
   script.

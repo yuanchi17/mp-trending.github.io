@@ -32,7 +32,7 @@ block content
               input.form-control.text-center(type="number", min="0", max="10", v-model.number="ticket.amount")
               .input-group-append: button.btn.btn-outline-secondary(type="button", @click="ticket.amount++", :disabled="ticket.amount > 9"): i.fa.fa-plus-circle
       .mt-auto.mb-3
-        a.btn.btn-primary.btn-block.mt-3(href=`${baseurl}tcap/page-1-8.html`) 下一步
+        a.btn.btn-secondary.btn-block.mt-3(href="page-1-8.html") 下一步
 
 block script
   script(crossorigin="anonymous", src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js")

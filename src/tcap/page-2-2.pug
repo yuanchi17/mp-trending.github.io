@@ -1,0 +1,30 @@
+extends /layout/tcap
+
+block style
+  meta(property="og:url", content=`${baseurl}tcap/`)
+
+block content
+  #app(v-cloak)
+    .container.py-3.d-flex.flex-column.min-vh-100
+      h2.text-center 設施 A#[br]選擇時段與人數
+      .form-group
+        label 時間選擇
+        select.form-control
+          option 請選擇
+      .form-group
+        label 成人
+        select.form-control
+          option(v-for="i in 6") {{ i-1 }}
+      .form-group
+        label 兒童
+        select.form-control
+          option(v-for="i in 6") {{ i-1 }}
+      .mt-auto.mb-3
+        a.btn.btn-lg.btn-block.btn-secondary.mt-3(href="page-2-3.html") 送出預約
+        a.btn.btn-lg.btn-block.btn-secondary.mt-3(href="page-1-9.html") 回預約設施清單
+
+block script
+  script.
+    window.vm = new Vue({
+      el: '#app',
+    })
