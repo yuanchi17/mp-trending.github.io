@@ -2,59 +2,103 @@ extends /layout/tcap
 
 block style
   meta(property="og:url", content=`${baseurl}tcap/`)
+  style
+      :sass
+        body
+          background-color: #F2F6F9
+        #app
+          overflow: hidden
+        .card
+          box-shadow: 0 2px 8px rgba(0, 0, 0, .08)
+          border: none
+          border-radius: 10px 10px 0px 0px
+        .circle-area
+          position: relative
+          & .outline
+            height: 3px
+            background-image: linear-gradient(to left, #F2F6F9 0%, #F2F6F9 80%, transparent 50%)
+            background-size: 15px 3px
+            background-repeat: repeat-x
+            background-color: white
+        .circle
+          background-color: #F2F6F9
+          border-radius: 99px
+          border: solid 1px #F2F6F9
+          height: 40px
+          position: absolute
+          top: -20px
+          width: 40px
+          z-index: 1
+          &.circle-left
+            left: -25px
+          &.circle-right
+            right: -25px
+        .tri-area
+          position: relative
+          background-color: white
+          & .outline
+            height: 20px
+            background-image: linear-gradient(45deg, transparent 33.33%, #F2F6F9 33.33%, #F2F6F9 66.66%, transparent 66.66%), linear-gradient(-45deg, transparent 33.33%, #F2F6F9 33.33%, #F2F6F9 66.66%, transparent 66.66%)
+            background-size: 15px 30px
 
 block content
-  #app.container.my-4.text-monospace(v-cloak)
-    h2.my-3.text-center 入園資訊
-    .card.my-2
-      .card-body.py-0
-        ul.list-group.list-group-flush
-          li.d-flex.list-group-item.px-0 入園日期
-            small.ml-auto {{ order.date }}
-          li.list-group-item.px-0 預定票數
-            .pl-2
-              .d-flex(v-if="order.tickets.normal")
-                small.my-1 全票 - NT$30
-                small.mx-1.ml-auto {{order.tickets.normal}} 張
-              .d-flex(v-if="order.tickets.student")
-                small.my-1 優待票（學生或 7~12 歲兒童）- NT$15
-                small.mx-1.ml-auto {{order.tickets.student}} 張
-              .d-flex(v-if="order.tickets.freeOld")
-                small.my-1 免費票（長者或愛心及陪伴者）- NT$0
-                small.mx-1.ml-auto {{order.tickets.freeOld}} 張
-              .d-flex(v-if="order.tickets.free6")
-                small.my-1 免費票（6 歲以下兒童）- NT$0
-                small.mx-1.ml-auto {{order.tickets.free6}} 張
-              .d-flex(v-if="order.tickets.freeOther")
-                small.my-1 免費票（其他）- NT$0
-                small.mx-1.ml-auto {{order.tickets.freeOther}} 張
-          li.list-group-item.px-0 聯絡資訊
-            .d-flex.flex-column.pl-2
-              small.my-1 姓名: {{ order.ctx.name }}
-              small.my-1 電話: {{ order.ctx.phone }}
-              small.my-1 電子郵件: {{ order.ctx.email }}
-    template(v-if="order.status === 'normal'")
-      .d-flex.mx-n1.mt-2
-        button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-danger(type="button", @click="btnCheckin") 確認入園
-        a.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-success(href=`${baseurl}tcap/page-1-8.html`) 預約設施
-      .d-flex.mx-n1.mt-2
-        button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-primary(type="button", @click="btnShare") 分享行程
-        button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-primary(type="button", @click="btnOrderDel") 取消預約
-    template(v-else-if="order.status === 'early'")
-      .d-flex.mx-n1.mt-2
-        a.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-success(href=`${baseurl}tcap/page-1-8.html`) 預約設施
-      .d-flex.mx-n1.mt-2
-        button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-primary(type="button", @click="btnShare") 分享行程
-        button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-primary(type="button", @click="btnOrderDel") 取消預約
-    template(v-else-if="order.status === 'checked'")
-      .d-flex.mx-n1.mt-2
-        button.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-primary(type="button", @click="btnShare") 分享行程
-        a.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-success(href=`${baseurl}tcap/page-1-8.html`) 預約設施
-    template(v-else-if="order.status === 'expired'")
-      button.mt-2.btn.btn-sm.btn-block.btn-secondary(type="button", disabled) 已過期
-      button.mt-2.btn.btn-sm.btn-block.btn-outline-danger(type="button", @click="btnOrderDel") 刪除紀錄
-    .mt-auto.mb-3
-      a.btn.btn-primary.btn-block.mt-2(href=`${baseurl}tcap/page-1-4.html`) 回預約紀錄
+  #app.container.d-flex.flex-column.min-vh-100(v-cloak)
+    h2.my-2.mb-3.text-center.title-color 預約入園詳細資料
+    .card.mt-auto
+      .card-body
+        h5.m-0.text-center.text-blue 入園資訊
+        h3.my-2.text-center.text-blue {{ order.date }}
+        .d-flex(v-if="order.tickets.normal")
+          p.m-0.my-1.mr-2 全票　
+          small.my-auto.text-gray-light (一般民眾)
+          p.m-0.mx-1.ml-auto {{order.tickets.normal}} 張
+        .d-flex(v-if="order.tickets.student")
+          p.m-0.my-1.mr-2 優待票
+          small.my-auto.text-gray-light (學生或 7~12 歲兒童)
+          p.m-0.mx-1.ml-auto {{order.tickets.student}} 張
+        .d-flex(v-if="order.tickets.freeOld")
+          p.m-0.my-1.mr-2 免費票
+          small.my-auto.text-gray-light (長者或愛心及陪伴者)
+          p.m-0.mx-1.ml-auto {{order.tickets.freeOld}} 張
+        .d-flex(v-if="order.tickets.free6")
+          p.m-0.my-1.mr-2 免費票
+          small.my-auto.text-gray-light (6 歲以下兒童)
+          p.m-0.mx-1.ml-auto {{order.tickets.free6}} 張
+        .d-flex(v-if="order.tickets.freeOther")
+          p.m-0.my-1.mr-2 免費票
+          small.my-auto.text-gray-light (其他)
+          p.m-0.mx-1.ml-auto {{order.tickets.freeOther}} 張
+    .circle-area.d-flex.flex-column
+      .circle.circle-left
+      .outline.mx-3
+      .circle.circle-right
+    .card
+      .card-body
+        h5.card-title.text-center.text-blue 聯絡資訊
+        p.m-0.my-1 姓名：{{ order.ctx.name }}
+        p.m-0.my-1 電話：{{ order.ctx.phone }}
+        p.m-0.my-1 電子郵件：{{ order.ctx.email }}
+    .tri-area
+      .outline
+    .mb-3(v-if="order.status === 'normal'")
+      .row.d-flex.mx-n1.mt-3
+        .col-4.px-1: a.btn.btn-outline-primary.btn-block(href=`${baseurl}tcap/page-1-4.html`) 回上頁
+        .col-8.px-1: button.my-0.btn.btn-block.btn-primary(type="button", @click="btnShare") 分享行程
+      .row.d-flex.mx-n1.mt-2
+        .col-4.px-1: button.my-0.btn.btn-block.btn-outline-secondary(type="button", @click="btnOrderDel") 取消
+        .col-8.px-1: button.my-0.btn.btn-block.btn-danger(type="button", @click="btnCheckin") 核銷入園
+    .mb-3(v-else-if="order.status === 'early'")
+      button.my-0.mt-3.btn.btn-block.btn-primary(type="button", @click="btnShare") 分享行程
+      .row.d-flex.mx-n1.mt-2
+        .col-6.px-1: a.btn.btn-outline-primary.btn-block(href=`${baseurl}tcap/page-1-4.html`) 回上頁
+        .col-6.px-1: button.my-0.btn.btn-block.btn-outline-secondary(type="button", @click="btnOrderDel") 取消
+    .mb-3(v-else-if="order.status === 'checked'")
+      .row.d-flex.mx-n1.mt-3
+        .col-4.px-1: a.btn.btn-outline-primary.btn-block(href=`${baseurl}tcap/page-1-4.html`) 回上頁
+        .col-8.px-1: button.my-0.btn.btn-block.btn-primary(type="button", @click="btnShare") 分享行程
+    .mb-3(v-else-if="order.status === 'expired'")
+      button.mt-2.btn.btn-block.btn-secondary(type="button", disabled) 已過期
+      button.mt-2.btn.btn-block.btn-danger(type="button", @click="btnOrderDel") 刪除紀錄
 
 block script
   script.
@@ -66,10 +110,11 @@ block script
           date: '2021-10-07',
           status: 'normal',
           tickets: {
+            free6: 2,
+            freeOld: 1,
+            freeOther: 1,
             normal: 3,
             student: 2,
-            free6: 1,
-            freeOther: 1,
           },
           ctx: {
             name: 'xxx',
