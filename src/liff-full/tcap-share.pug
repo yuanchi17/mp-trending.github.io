@@ -7,6 +7,10 @@ block beforehtml
 
 block style
   meta(property="og:url", content=`https://liff.line.me/${liffidTcap}/tcap-share.html`)
+  style
+    :sass
+      body
+        background-color: #F2F6F9
 
 block script
   include /component/helpers.pug
@@ -44,6 +48,8 @@ block script
       },
       methods: {
         async init () {
+          this.showLoading('請稍候', '載入中')
+          await loginPromise
           await this.btnShare()
           const redirect = localStorage.getItem('tcap-redirect') || '/tcap/page-1-4.html'
           localStorage.removeItem('tcap-redirect')

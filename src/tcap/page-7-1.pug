@@ -3,33 +3,24 @@ extends /layout/tcap
 block style
   meta(property="og:url", content=`${baseurl}tcap/`)
   style
-      :sass
-        body
-          background-color: #F2F6F9
-        #app
-          overflow: hidden
+    :sass
+      body
+        background-color: #F2F6F9
 
 block content
   #app.container.d-flex.flex-column.min-vh-100(v-cloak)
     h2.my-2.mb-3.text-center.title-color 核銷設施預約
-    #ticket
-      .card
-        .card-body.mb-3
-          h5.text-center.text-blue 魔法星際飛車
-          img.card-img-top(src="https://i.imgur.com/xIy8FTY.png")
-      .circle-area.d-flex.flex-column
-        .circle.circle-left
-        .outline.mx-3
-        .circle.circle-right
-      .card
-        .card-body
-          p.m-0.my-1 入園日期：2021-12-02
-          p.m-0.my-1 場次時間：09:00 ~ 09:30
-          p.m-0.my-1 成人：2 位
-          p.m-0.my-1 兒童：2 位
-      .tri-area
-        .outline
-      p.text-center.text-gray-light 本頁面請工作人員點選，如不慎誤觸「核銷設施」，請自行負責。
+    #ticket.card.mb-4
+      .card-body
+        h4.text-center.text-blue 魔法星際飛車
+        img.card-img-top(src="https://i.imgur.com/xIy8FTY.png")
+      .line
+      .card-body.text-gray
+        p.m-0.my-1 入園日期：2021-12-02
+        p.m-0.my-1 場次時間：09:00 ~ 09:30
+        p.m-0.my-1 成人：2 位
+        p.m-0.my-1 兒童：2 位
+    p.text-center.text-gray-light 本頁面請工作人員點選，如不慎誤觸「核銷設施」，請自行負責。
     button.mt-auto.mb-3.btn.btn-block.btn-danger(type="button", @click="btnCheckin", v-if="!checkin") 核銷設施
     button.mt-auto.mb-3.btn.btn-block.btn-secondary(type="button", disable, v-else) 核銷成功
 
@@ -42,7 +33,7 @@ block script
       },
       methods: {
         async btnCheckin () {
-          const result = await Swal.fire({
+          await Swal.fire({
             confirmButtonText: '確定',
             icon: 'success',
             text: '恭喜您完成報到，請注意設施安全守則，並把個人物品放置於安全處，聽從工作人員指揮',

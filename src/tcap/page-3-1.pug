@@ -3,52 +3,43 @@ extends /layout/tcap
 block style
   meta(property="og:url", content=`${baseurl}tcap/`)
   style
-      :sass
-        body
-          background-color: #F2F6F9
-        #app
-          overflow: hidden
+    :sass
+      body
+        background-color: #F2F6F9
 
 block content
   #app.container.d-flex.flex-column.min-vh-100(v-cloak)
     h2.my-2.mb-3.text-center.title-color 預約入園詳細資料
-    #ticket.mt-auto
-      .card
-        .card-body
-          h5.m-0.text-center.text-blue 入園資訊
-          h3.my-2.text-center.text-blue {{ order.date }}
-          .d-flex(v-if="order.tickets.normal")
-            p.m-0.my-1.mr-2 全票　
-            small.my-auto.text-gray-light (一般民眾)
-            p.m-0.mx-1.ml-auto {{order.tickets.normal}} 張
-          .d-flex(v-if="order.tickets.student")
-            p.m-0.my-1.mr-2 優待票
-            small.my-auto.text-gray-light (學生或 7~12 歲兒童)
-            p.m-0.mx-1.ml-auto {{order.tickets.student}} 張
-          .d-flex(v-if="order.tickets.freeOld")
-            p.m-0.my-1.mr-2 免費票
-            small.my-auto.text-gray-light (長者或愛心及陪伴者)
-            p.m-0.mx-1.ml-auto {{order.tickets.freeOld}} 張
-          .d-flex(v-if="order.tickets.free6")
-            p.m-0.my-1.mr-2 免費票
-            small.my-auto.text-gray-light (6 歲以下兒童)
-            p.m-0.mx-1.ml-auto {{order.tickets.free6}} 張
-          .d-flex(v-if="order.tickets.freeOther")
-            p.m-0.my-1.mr-2 免費票
-            small.my-auto.text-gray-light (其他)
-            p.m-0.mx-1.ml-auto {{order.tickets.freeOther}} 張
-      .circle-area.d-flex.flex-column
-        .circle.circle-left
-        .outline.mx-3
-        .circle.circle-right
-      .card
-        .card-body
-          h5.card-title.text-center.text-blue 聯絡資訊
-          p.m-0.my-1 姓名：{{ order.ctx.name }}
-          p.m-0.my-1 電話：{{ order.ctx.phone }}
-          p.m-0.my-1 電子郵件：{{ order.ctx.email }}
-      .tri-area
-        .outline
+    #ticket.card.mt-auto.mb-4
+      .card-body
+        h4.m-0.text-center.text-blue 入園資訊
+        h3.my-2.text-blue {{ order.date }}
+        .d-flex.mb-2.text-gray(v-if="order.tickets.normal")
+          p.m-0.mr-2 全票
+          small.my-auto.text-gray-light (一般民眾)
+          p.m-0.mx-1.ml-auto {{order.tickets.normal}} 張
+        .d-flex.mb-2.text-gray(v-if="order.tickets.student")
+          p.m-0.mr-2 優待票
+          small.my-auto.text-gray-light (學生或 7~12 歲兒童)
+          p.m-0.mx-1.ml-auto {{order.tickets.student}} 張
+        .d-flex.mb-2.text-gray(v-if="order.tickets.freeOld")
+          p.m-0.mr-2 免費票
+          small.my-auto.text-gray-light (長者或愛心及陪伴者)
+          p.m-0.mx-1.ml-auto {{order.tickets.freeOld}} 張
+        .d-flex.mb-2.text-gray(v-if="order.tickets.free6")
+          p.m-0.mr-2 免費票
+          small.my-auto.text-gray-light (6 歲以下兒童)
+          p.m-0.mx-1.ml-auto {{order.tickets.free6}} 張
+        .d-flex.mb-2.text-gray(v-if="order.tickets.freeOther")
+          p.m-0.mr-2 免費票
+          small.my-auto.text-gray-light (其他)
+          p.m-0.mx-1.ml-auto {{order.tickets.freeOther}} 張
+      .line
+      .card-body
+        h4.card-title.text-center.text-blue 聯絡資訊
+        p.mb-2.text-gray 姓名：{{ order.ctx.name }}
+        p.mb-2.text-gray 電話：{{ order.ctx.phone }}
+        p.mb-2.text-gray 電子郵件：{{ order.ctx.email }}
     .mb-3(v-if="order.status === 'normal'")
       .row.d-flex.mx-n1.mt-3
         .col-4.px-1: a.btn.btn-outline-primary.btn-block(href=`${baseurl}tcap/page-1-4.html`) 回上頁

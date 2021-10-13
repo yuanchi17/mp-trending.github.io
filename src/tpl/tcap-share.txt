@@ -51,13 +51,13 @@ function renderCard (ctx) {
         ],
         spacing: 'md',
         paddingAll: '15px',
-        backgroundColor: '#0268b7',
+        backgroundColor: '#4478DD',
       },
       hero: {
         type: 'image',
-        url: 'https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_1_cafe.png',
+        url: 'https://i.imgur.com/xIy8FTY.png',
         size: 'full',
-        aspectRatio: '20:13',
+        aspectRatio: '3:2',
         aspectMode: 'cover',
         action: {
           type: 'uri',
@@ -82,7 +82,7 @@ function renderCard (ctx) {
         spacing: 'sm',
         contents: [
           {
-            color: '#0268b7',
+            color: '#4478DD',
             height: 'sm',
             style: 'primary',
             type: 'button',
