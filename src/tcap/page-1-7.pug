@@ -22,28 +22,26 @@ block style
         .booking-progress-circle
           width: 16px
           height: 16px
-          border: 2px solid #dddddd
+          border: 2px solid rgba(112,112,112,.6)
         .booking-progress-circle.active
           border: 2px solid #4478dd
         .booking-progress-circle.finished
           border: 5px solid #4478dd
         .booking-progress-line
           height: 2px
-          background-color: #dddddd
+          background-color: rgba(112,112,112,.6)
         .booking-progress-line.finished
           background-color: #4478dd
         .booking-progress-label
           width: 80px
           font-size: .8rem
           white-space: nowrap
-          color: #aaaaaa
+          color: rgb(112,112,112)
         .booking-progress-label.finished
           color: #4478dd
       .ticket
         .ticket-amount
           min-width: 7rem
-        .ticket-title
-          color: #4478dd
 
 block content
   #app(v-cloak)
@@ -67,8 +65,8 @@ block content
         .ticket.d-flex.flex-column
           .d-flex.mt-3.align-items-center(v-for="ticket of tickets")
             .flex-fill.mr-1.d-flex.flex-column.justify-content-center
-              .ticket-title {{ ticket.title }}
-              small.text-muted ({{ ticket.type }})
+              .ticket-title.text-blue {{ ticket.title }}
+              small.text-gray-light ({{ ticket.type }})
             .ticket-amount
               .input-group.input-group-lg
                 .input-group-prepend: button.btn.btn-outline-secondary(type="button", @click="ticket.amount--", :disabled="ticket.amount < 1"): i.fa.fa-minus
