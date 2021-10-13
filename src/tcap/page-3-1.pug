@@ -9,13 +9,13 @@ block style
 
 block content
   #app.container.d-flex.flex-column.min-vh-100(v-cloak)
-    h2.my-2.mb-3.text-center.title-color 預約入園詳細資料
+    h2.my-3.mb-3.text-center.title-style 預約入園詳細資料
     #ticket.card.mt-auto.mb-4
       .card-body
         h4.m-0.text-center.text-blue 入園資訊
         h3.my-2.text-blue {{ order.date }}
         .d-flex.mb-2.text-gray(v-if="order.tickets.normal")
-          p.m-0.mr-2 全票
+          p.m-0.mr-2 全&emsp;票
           small.my-auto.text-gray-light (一般民眾)
           p.m-0.mx-1.ml-auto {{order.tickets.normal}} 張
         .d-flex.mb-2.text-gray(v-if="order.tickets.student")
@@ -58,30 +58,36 @@ block content
         .col-8.px-1: button.my-0.btn.btn-block.btn-primary(type="button", @click="btnShare") 分享行程
     .mb-3(v-else-if="order.status === 'expired'")
       button.mt-2.btn.btn-block.btn-secondary(type="button", disabled) 已過期
-      button.mt-2.btn.btn-block.btn-danger(type="button", @click="btnOrderDel") 刪除紀錄
+      .row.d-flex.mx-n1.mt-2
+        .col-6.px-1: a.btn.btn-outline-primary.btn-block(href=`${baseurl}tcap/page-1-4.html`) 回上頁
+        .col-6.px-1: button.btn.btn-block.btn-outline-danger(type="button", @click="btnOrderDel") 刪除紀錄
 
 block script
   script.
     window.vm = new Vue({
       el: '#app',
       data: {
+        oId: 0,
         order: {
-          checkin: false,
-          date: '2021-10-07',
-          status: 'normal',
-          tickets: {
-            free6: 2,
-            freeOld: 1,
-            freeOther: 1,
-            normal: 3,
-            student: 2,
-          },
-          ctx: {
-            name: 'xxx',
-            phone: '09********',
-            email: 'xxxxx@xxxx.com.tw',
-          },
+          ctx: {},
+          date: '',
+          status: null,
+          tickets: {},
         },
+        h: {},
+      },
+      async mounted () {
+        // 自動儲存功能
+        try {
+          const saved = JSON.parse(localStorage.getItem('tcap'))
+          if (saved) this.$set(this, 'h', { ...this.h, ...saved })
+        } catch (err) {}
+        this.$watch('h', () => {
+          localStorage.setItem('tcap', JSON.stringify(this.h))
+        }, { deep: true })
+
+        this.$set(this, 'oId', this.param('oId', 0))
+        this.$set(this, 'order', this.h.orders[this.oId])
       },
       methods: {
         async btnCheckin () {
@@ -93,7 +99,7 @@ block script
             focusCancel: true,
             showCancelButton: true,
             text: '核銷按鈕請工作人員點選，如不慎誤觸核銷，請自行負責',
-            title: '<h2 class="swal-title">核銷入園</h2>',
+            title: '<h2 class="title-stlye">核銷入園</h2>',
           })
           if (!result.value) return
 
@@ -104,7 +110,7 @@ block script
             confirmButtonText: '前往 LINE 官方帳號',
             icon: 'success',
             text: '入園成功，感謝您的支持',
-            title: '<h2 class="swal-title">恭喜入園</h2>',
+            title: '<h2 class="title-stlye">恭喜入園</h2>',
           })
           if (!lineOA.value) return
           window.open('https://line.me/R/ti/p/#{lineatOaId}')
@@ -122,12 +128,13 @@ block script
             text: isExpired ? '請問您確定要刪除此次的入園資訊嗎？' : '請問您確定要取消此次的入園預約嗎？',
           })
           if (!result.value) return
+          this.h.orders.splice(this.oId, 1)
 
           const lineOA = await Swal.fire({
             confirmButtonText: '前往 LINE 官方帳號',
             icon: 'success',
             text: isExpired ? '刪除 入園資訊 成功' : '取消 入園預約 成功',
-            title: `<h2 class="swal-title">${isExpired ? '成功刪除' : '成功取消'}</h2>`,
+            title: `<h2 class="title-stlye">${isExpired ? '成功刪除' : '成功取消'}</h2>`,
           })
           if (!lineOA.value) {
             location.href = 'page-1-4.html'
@@ -140,6 +147,10 @@ block script
           url.searchParams.set('redirect', window.encodeBase64url('/tcap/page-3-1.html'))
           location.href = url.href
           return await new Promise(resolve => {}) // 不會結束的 Promise
+        },
+        param (key, defaultValue) {
+          const val = new URL(location).searchParams.get(key)
+          return _.isNil(val) ? defaultValue : val
         },
       },
     })

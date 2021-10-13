@@ -2,22 +2,39 @@ extends /layout/tcap
 
 block style
   meta(property="og:url", content=`${baseurl}tcap/`)
+  style
+    :sass
+      body
+        background-color: #F2F6F9
+      .card
+        border: 0px
+        box-shadow: 0 2px 8px rgba(0,0,0, .08)
+      img
+        height: 15px
+        width: 15px
 
 block content
-  #app.text-monospace
-    .container.d-flex.flex-column.min-vh-100
-      h2.my-3.text-center 預約紀錄
-      p 這裡是您的預約紀錄，若需要安排新的行程，快點選「新增預約」或「預約設施」來安排行程吧!!!
-      .card.my-2(v-for="(order, oId) of orders" :key="order.date")
-        .card-body
-          .d-flex
-            h5.card-title.m-0.my-auto {{ order.date }}
-            span.mx-1.ml-auto {{ order.total }} 人
-          .d-flex.mx-n1.mt-2
-            a.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-primary(href="page-3-1.html") 詳細資訊
-            a.mx-1.my-0.btn.btn-sm.btn-block.btn-outline-success(href="page-1-8.html", v-if="order.status !== 'expired'") 預約設施
-      .mt-auto.mb-3
-        a.btn.btn-secondary.btn-block.mt-3(href="page-1-6.html") 新增預約
+  #app.container.d-flex.flex-column.min-vh-100(v-cloak)
+    h2.my-3.text-center.title-style 預約紀錄
+    .card.my-2(v-if="orders.length", v-for="(order, oId) of orders", :key="order.date")
+      .card-body
+        .d-flex.mb-2(@click="order.expand = !order.expand")
+          h4.mb-0.card-title.text-blue {{ order.date }}
+          img.my-auto.ml-auto(src="https://i.imgur.com/qPiE5TE.png", v-if="order.expand")
+          img.my-auto.ml-auto(src="https://i.imgur.com/qGwZEu1.png", v-else)
+        .d-flex.text-gray.mb-1(@click="order.expand = !order.expand")
+          img.my-auto.mr-1(src="https://i.imgur.com/NAuUBr3.png")
+          p.m-0.text-gary 入園人數
+          span.ml-auto.text-gary {{ order.total }} 位
+        .d-flex.text-gray.mb-1(@click="order.expand = !order.expand")
+          img.my-auto.mr-1(src="https://i.imgur.com/NAuUBr3.png")
+          p.m-0.text-gary 已預約設施
+          span.ml-auto.text-gary {{ order.games.length || 0 }} 項
+        .d-flex.text-gray.mx-n1.mt-3(v-if="order.expand")
+          a.mx-1.my-0.btn.btn-block.btn-outline-primary(@click="btnDetail(oId)") 詳細資料
+          a.mx-1.my-0.btn.btn-block.btn-outline-primary(href="page-1-9.html", v-if="order.status !== 'expired'") 預約設施
+    p.my-2.text-center.text-gray-light 這裡是您的預約紀錄，快點選「新增預約」或「預約設施」來安排行程吧！
+    button.my-3.mt-auto.btn.btn-lg.btn-block.btn-primary(type="button", @click="btnAddOrder") 新增預約
 
 block script
   script.
@@ -25,52 +42,7 @@ block script
       el: '#app',
       data: {
         h: {
-          orders: [
-            {
-              checkin: false,
-              date: '2021-10-04',
-              tickets: {
-                normal: 3,
-                student: 2,
-                free6: 1,
-                freeOld: 1,
-                freeOther: 1,
-              },
-              ctx: {
-                name: 'xxx',
-                phone: '09********',
-                email: 'xxxxx@xxxx.com.tw',
-              },
-            },
-            {
-              checkin: false,
-              date: '2021-10-07',
-              tickets: {
-                normal: 3,
-                student: 2,
-                free6: 1,
-                freeOther: 1,
-              },
-              ctx: {
-                name: 'xxx',
-                phone: '09********',
-                email: 'xxxxx@xxxx.com.tw',
-              },
-            },
-            {
-              checkin: false,
-              date: '2021-11-15',
-              tickets: {
-                normal: 3,
-                free6: 2,
-              },
-              ctx: {
-                name: 'yyy',
-                phone: '09********',
-                email: 'xxxxx@xxxx.com.tw',
-              },
-            },
-          ],
+          orders: [],
         },
       },
       async mounted () {
@@ -87,10 +59,12 @@ block script
         orders () {
           const now = moment()
           if (!this.h.orders) return []
-          return _.map(this.h.orders, order => ({
+          const orders = _.orderBy(_.map(this.h.orders, order => ({
             ...order,
             ...this.cpuOrderStatus({ now, order }),
-          }))
+          })), ['date'], ['asc'])
+          this.$set(this.h, 'orders', orders)
+          return orders
         },
       },
       methods: {
@@ -102,6 +76,28 @@ block script
           if (now > expired) return { total, status: 'expired' } // 已過期
           if (date < now) return { total, status: 'normal' } // 待入園
           return { total, status: 'early' } // 不可入園
+        },
+        async btnAddOrder () {
+          const result = await Swal.fire({
+            cancelButtonText: '不同意',
+            confirmButtonColor: '#4478dd',
+            confirmButtonText: '同意',
+            showCancelButton: true,
+            html: `<ol>
+            <li class="text-left mb-2">請依預約場次於開場前二十分鐘至五分鐘內，全員到齊完成報到程序，逾時視同放棄。</li>
+            <li class="text-left mb-2">兒童身高限制在 90-150 以內，需要成年人陪同。</li>
+            <li class="text-left">入場前請詳細閱讀場地使用限制與安全事項。</li>
+            </ol>`,
+            title: '<h2 class="title-stlye">預約說明</h2>',
+            customClass: {
+              content: 'px-0',
+            },
+          })
+          if (!result.value) return
+          location.href = 'page-1-7.html'
+        },
+        btnDetail (oId) {
+          location.href = 'page-3-1.html?' + window.httpBuildQuery({ oId })
         },
       },
     })

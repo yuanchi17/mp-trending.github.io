@@ -57,8 +57,48 @@ block content
             .booking-progress-label.finished 入園資訊
             .booking-progress-label.finished 聯絡資訊
             .booking-progress-label 完成
-        input.form-control.form-control-lg.mt-3(type="text", placeholder="姓名")
-        input.form-control.form-control-lg.mt-3(type="tel", placeholder="電話")
-        input.form-control.form-control-lg.mt-3(type="email", placeholder="E-mail")
+        input.form-control.form-control-lg.mt-3(type="text", placeholder="姓名", v-model="ctx.name")
+        input.form-control.form-control-lg.mt-3(type="tel", placeholder="電話", v-model="ctx.phone")
+        input.form-control.form-control-lg.mt-3(type="email", placeholder="E-mail", v-model="ctx.email")
         .mt-auto.mb-3
-          a.btn.btn-lg.btn-primary.btn-block.mt-3(href="page-1-8-b.html") 完成預約
+          button.btn.btn-lg.btn-primary.btn-block.mt-3(type="button", @click="btnSubmit") 完成預約
+
+block script
+  script.
+    window.vm = new Vue({
+      el: '#app',
+      data: {
+        ctx: {
+          name: '',
+          phone: '',
+          email: '',
+        },
+        h: {},
+      },
+      async mounted () {
+        // 自動儲存功能
+        try {
+          const saved = JSON.parse(localStorage.getItem('tcap'))
+          if (saved) this.$set(this, 'h', { ...this.h, ...saved })
+        } catch (err) {}
+        this.$watch('h', () => {
+          localStorage.setItem('tcap', JSON.stringify(this.h))
+        }, { deep: true })
+      },
+      methods: {
+        async btnSubmit () {
+          this.$set(this.h, 'submit', {
+            ..._.get(this.h, 'submit'),
+            checkin: false,
+            ctx: this.ctx,
+            expand: false,
+            games: [],
+          })
+          this.$set(this.h, 'orders', [
+            ..._.get(this.h, 'orders', []),
+            this.h.submit,
+          ])
+          location.href = 'page-1-8-b.html'
+        },
+      },
+    })
