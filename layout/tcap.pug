@@ -26,6 +26,9 @@ html
           display: none
         body, .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6
           font-family: 'Noto Sans TC', sans-serif
+        .swal-title
+          color: #21205B
+          font-weight: 600
         .title-color
           color: #21205B
         .text-blue
@@ -36,6 +39,39 @@ html
           color: rgba(112,112,112,.6)
         .text-red
           color: #DC3545
+        #ticket
+          & .card
+            box-shadow: 0 2px 8px rgba(0, 0, 0, .08)
+            border: none
+            border-radius: 10px 10px 0px 0px
+          & .circle-area
+            position: relative
+            & .outline
+              height: 3px
+              background-image: linear-gradient(to left, #F2F6F9 0%, #F2F6F9 80%, transparent 50%)
+              background-size: 15px 3px
+              background-repeat: repeat-x
+              background-color: white
+          & .circle
+            background-color: #F2F6F9
+            border-radius: 99px
+            border: solid 1px #F2F6F9
+            height: 40px
+            position: absolute
+            top: -20px
+            width: 45px
+            z-index: 1
+            &.circle-left
+              left: -25px
+            &.circle-right
+              right: -25px
+          & .tri-area
+            position: relative
+            background-color: white
+            & .outline
+              height: 20px
+              background-image: linear-gradient(45deg, transparent 33.33%, #F2F6F9 33.33%, #F2F6F9 66.66%, transparent 66.66%), linear-gradient(-45deg, transparent 33.33%, #F2F6F9 33.33%, #F2F6F9 66.66%, transparent 66.66%)
+              background-size: 15px 30px
     block style
   body
     include /component/livereload

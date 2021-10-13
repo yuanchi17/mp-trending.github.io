@@ -2,37 +2,53 @@ extends /layout/tcap
 
 block style
   meta(property="og:url", content=`${baseurl}tcap/`)
+  style
+      :sass
+        body
+          background-color: #F2F6F9
+        #app
+          overflow: hidden
 
 block content
-  #app.container.my-4.text-monospace
-    h3.text-center 預約證明
-    p.mx-2.text-danger.text-center 本頁面請工作人員點選，如不甚誤觸「確認核銷」，請自行負責
-    .card.my-2
-      .card-body(v-if="param('game') === 'a'")
-        h5.card-title 設施A
-        p.my-2 日期：2021/10/10
-        p.my-2 時間：12:00
-        p.my-2 姓名：XXX
-        p.my-2 成人：2
-        p.my-2 兒童：3
-      .card-body(v-else)
-        h5.card-title 設施B
-        p.my-2 日期：2021/10/10
-        p.my-2 時間：09:00
-        p.my-2 姓名：XXX
-        p.my-2 成人：2
-        p.my-2 兒童：3
-    a.btn.btn-danger.btn-block.my-2(href=`${baseurl}tcap/page-7-2.html`) 確認核銷
+  #app.container.d-flex.flex-column.min-vh-100(v-cloak)
+    h2.my-2.mb-3.text-center.title-color 核銷設施預約
+    #ticket
+      .card
+        .card-body.mb-3
+          h5.text-center.text-blue 魔法星際飛車
+          img.card-img-top(src="https://i.imgur.com/xIy8FTY.png")
+      .circle-area.d-flex.flex-column
+        .circle.circle-left
+        .outline.mx-3
+        .circle.circle-right
+      .card
+        .card-body
+          p.m-0.my-1 入園日期：2021-12-02
+          p.m-0.my-1 場次時間：09:00 ~ 09:30
+          p.m-0.my-1 成人：2 位
+          p.m-0.my-1 兒童：2 位
+      .tri-area
+        .outline
+      p.text-center.text-gray-light 本頁面請工作人員點選，如不慎誤觸「核銷設施」，請自行負責。
+    button.mt-auto.mb-3.btn.btn-block.btn-danger(type="button", @click="btnCheckin", v-if="!checkin") 核銷設施
+    button.mt-auto.mb-3.btn.btn-block.btn-secondary(type="button", disable, v-else) 核銷成功
 
 block script
   script.
     window.vm = new Vue({
       el: '#app',
-      data: {},
+      data: {
+        checkin: false,
+      },
       methods: {
-        param (key, defaultValue) {
-          const val = new URL(location).searchParams.get(key)
-          return _.isNil(val) ? defaultValue : val
+        async btnCheckin () {
+          const result = await Swal.fire({
+            confirmButtonText: '確定',
+            icon: 'success',
+            text: '恭喜您完成報到，請注意設施安全守則，並把個人物品放置於安全處，聽從工作人員指揮',
+            title: '<h2 class="swal-title">設施核銷成功</h2>',
+          })
+          this.checkin = true
         },
       },
     })
