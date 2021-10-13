@@ -4,35 +4,78 @@ block style
   meta(property="og:url", content=`${baseurl}tcap/`)
   style
     :sass
+      .aspect-ratio-box
+        height: 0
+        overflow: hidden
+        position: relative
+      .aspect-ratio-box-inside
+        position: absolute
+        top: 0
+        left: 0
+        width: 100%
+        height: 100%
+      .booking
+        background-color: #f2f6f9
+      .booking-progress
+        .booking-progress-bar
+          padding: 0 32px
+        .booking-progress-circle
+          width: 16px
+          height: 16px
+          border: 2px solid #dddddd
+        .booking-progress-circle.active
+          border: 2px solid #4478dd
+        .booking-progress-circle.finished
+          border: 5px solid #4478dd
+        .booking-progress-line
+          height: 2px
+          background-color: #dddddd
+        .booking-progress-line.finished
+          background-color: #4478dd
+        .booking-progress-label
+          width: 80px
+          font-size: .8rem
+          white-space: nowrap
+          color: #aaaaaa
+        .booking-progress-label.finished
+          color: #4478dd
       .ticket
         .ticket-amount
           min-width: 7rem
+        .ticket-title
+          color: #4478dd
 
 block content
   #app(v-cloak)
-    .container.d-flex.flex-column.min-vh-100
-      h1.my-3.text-center 選擇日期與人數
-      table.table.table-bordered.calendar.text-center
-        thead.table-sm
-          tr: th(colspan="7") {{ dayjs().utcOffset(8).startOf('month').add(monthOffset, 'month').format('YYYY/MM') }}
-          tr: th(v-for="weekname in '日一二三四五六'") {{ weekname }}
-        tbody
-          tr(v-for="row in calendarCeils")
-            template(v-for="ceil in row")
-              td.table-primary.text-primary(v-if="selected === ceil.value") {{ ceil.date }}
-              td.text-primary(v-else-if="ceil.type === 'enable'", @click="selected = ceil.value") {{ ceil.date }}
-              td.text-muted(v-else-if="ceil.type === 'disable'") {{ ceil.date }}
-              td(v-else)
-      .ticket.d-flex.flex-column
-        .d-flex.mt-2.align-items-center(v-for="ticket of tickets")
-          .flex-fill.mr-1 {{ ticket.name }}
-          .ticket-amount
-            .input-group.input-group-sm
-              .input-group-prepend: button.btn.btn-outline-secondary(type="button", @click="ticket.amount--", :disabled="ticket.amount < 1"): i.fa.fa-minus-circle
-              input.form-control.text-center(type="number", min="0", max="10", v-model.number="ticket.amount")
-              .input-group-append: button.btn.btn-outline-secondary(type="button", @click="ticket.amount++", :disabled="ticket.amount > 9"): i.fa.fa-plus-circle
-      .mt-auto.mb-3
-        a.btn.btn-secondary.btn-block.mt-3(href="page-1-8.html") 下一步
+    .container-fluid.px-0.d-flex.flex-column.min-vh-100(style="background-color: #4478dd")
+      .aspect-ratio-box(style="padding-top: calc(250 / 375 * 100%)")
+        h1.aspect-ratio-box-inside.text-center.text-white.mb-0.pt-4 預約入園
+      .booking.flex-fill.d-flex.flex-column.rounded-top.px-3
+        .booking-progress.mt-4
+          .booking-progress-bar.d-flex.align-items-center
+            .booking-progress-circle.rounded-circle.active
+            .booking-progress-line.flex-fill
+            .booking-progress-circle.rounded-circle
+            .booking-progress-line.flex-fill
+            .booking-progress-circle.rounded-circle
+          .booking-progress-labels.d-flex.justify-content-between.text-center
+            .booking-progress-label.finished 入園資訊
+            .booking-progress-label 聯絡資訊
+            .booking-progress-label 完成
+        select.form-control.form-control-lg.mt-3(v-model="date")
+          option(v-for="val, key in dateSelectable", :value="key") {{ val }}
+        .ticket.d-flex.flex-column
+          .d-flex.mt-3.align-items-center(v-for="ticket of tickets")
+            .flex-fill.mr-1.d-flex.flex-column.justify-content-center
+              .ticket-title {{ ticket.title }}
+              small.text-muted ({{ ticket.type }})
+            .ticket-amount
+              .input-group.input-group-lg
+                .input-group-prepend: button.btn.btn-outline-secondary(type="button", @click="ticket.amount--", :disabled="ticket.amount < 1"): i.fa.fa-minus
+                input.form-control.text-center(type="number", min="0", max="10", v-model.number="ticket.amount")
+                .input-group-append: button.btn.btn-outline-secondary(type="button", @click="ticket.amount++", :disabled="ticket.amount > 9"): i.fa.fa-plus
+        .mt-auto.mb-3
+          a.btn.btn-lg.btn-primary.btn-block.mt-3(href="page-1-8.html") 下一步
 
 block script
   script(crossorigin="anonymous", src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js")
@@ -43,38 +86,22 @@ block script
     window.vm = new Vue({
       el: '#app',
       data: {
-        monthOffset: 0,
-        selected: dayjs().utcOffset(8).startOf('day').format('YYYY-MM-DD'),
+        date: dayjs().utcOffset(8).startOf('day').format('YYYY-MM-DD'),
         tickets: [
-          { name: '全票 - NT$30', amount: 0 },
-          { name: '優待票(學生或7~12歲兒童) - NT$15', amount: 0 },
-          { name: '免費票(長者或愛心及陪伴者) - NT$0', amount: 0 },
-          { name: '免費票(6歲以下幼童) - NT$0', amount: 0 },
-          { name: '免費票(其他) - NT$0', amount: 0 },
+          { title: '全票 - NT$30', type: '一般民眾', amount: 0 },
+          { title: '優待票 - NT$15', type: '學生或7~12歲兒童', amount: 0 },
+          { title: '免費票 - NT$0', type: '長者或愛心及陪伴者', amount: 0 },
+          { title: '免費票 - NT$0', type: '6歲以下幼童', amount: 0 },
+          { title: '免費票 - NT$0', type: '其他', amount: 0 },
         ],
       },
       computed: {
-        calendarCeils () {
-          return this.getCalendarCeils(this.monthOffset)
-        },
-      },
-      methods: {
-        getCalendarCeils (monthOffset = 0) {
+        dateSelectable () {
           const today = dayjs().utcOffset(8).startOf('day')
-          const startOfMonth = dayjs().utcOffset(8).startOf('month').add(monthOffset, 'month')
-          const endOfMonth = startOfMonth.clone().endOf('month')
-          const fnEmptyCeil = () => ({ type: 'blank' })
-          console.log(`today = ${today.format('YYYY-MM-DD')}, startOfMonth = ${startOfMonth.format('YYYY-MM-DD')}, endOfMonth = ${endOfMonth.format('YYYY-MM-DD')}`)
-          const ceils = _.times(startOfMonth.day(), fnEmptyCeil)
-          for (let i = startOfMonth.clone(); i <= endOfMonth; i = i.add(1, 'day')) {
-            ceils.push({
-              date: i.date(),
-              type: i >= today ? 'enable' : 'disable',
-              value: i.format('YYYY-MM-DD'),
-            })
-          }
-          if (ceils.length % 7) ceils.push(..._.times(7 - ceils.length % 7, fnEmptyCeil))
-          return _.chunk(ceils, 7)
+          return _.fromPairs(_.times(7, i => {
+            const tmp = today.clone().add(i, 'day')
+            return [tmp.format('YYYY-MM-DD'), `${tmp.format('YYYY/MM/DD')} (${'日一二三四五六'[tmp.day()]})`]
+          }))
         },
       },
     })

@@ -4,9 +4,21 @@ block style
   meta(property="og:url", content=`${baseurl}tcap/`)
 
 block content
-  #app
-    .container.d-flex.flex-column.min-vh-100
-      h2.my-3.text-center Sorry...
-      p 由於您的預約紀錄異常，請您聯絡客服進行預約作業。
-      .mt-auto.mb-3
-        a.btn.btn-secondary.btn-block.mt-3(href="tel:0228333823") 客服電話
+  #app(v-cloak)
+
+block script
+  script.
+    window.sleep = t => new Promise(resolve => setTimeout(resolve, t))
+    window.vm = new Vue({
+      el: '#app',
+      async mounted () {
+        await Swal.fire({
+          icon: 'error',
+          title: 'Sorry...',
+          text: '由於您的預約紀錄異常，請您聯絡客服進行預約作業。',
+        })
+        location.href = 'tel:0228333823'
+        await window.sleep(1000)
+        location.href = 'index.html'
+      },
+    })

@@ -2,25 +2,27 @@ extends /layout/tcap
 
 block style
   meta(property="og:url", content=`${baseurl}tcap/`)
+  style
+    :sass
+      body
+        background-color: #f2f6f9
 
 block content
   #app(v-cloak)
     .container.d-flex.flex-column.min-vh-100.py-3
-      h2.text-center 設施預約清單
-      p.mt-3 可點選已預約設施圖片觀看詳細預約資訊
-      .row.mt-2
-        .col: button.btn.btn-lg.btn-block.btn-primary(type="button", @click="btnShare") 分享行程
-        .col: a.btn.btn-lg.btn-block.btn-secondary(href="page-2-1.html") 新增預約
-      h3.mt-4.text-center 已預約設施
-      a(href="page-2-4.html"): .card.mt-3
-        .card-body.d-flex.justify-content-between
-          span 設施B
-          span 09:00
-      a(href="page-2-4.html"): .card.mt-3
-        .card-body.d-flex.justify-content-between
-          span 設施A
-          span 12:00
-      button.btn.btn-lg.btn-block.btn-secondary.mt-auto(type="button", @click="btnAlert") 預約須知
+      h2.text-center 預約設施清單
+      h1.mt-5.mb-0.text-primary 2021-12-01
+      .text-primary 入園人數：5
+      .mt-5 已預約設施 #[span.badge.badge-pill.badge-info 5 項]
+      a(href="page-2-4.html"): .card.border-white.shadow-sm.mt-2
+        .card-body.d-flex.flex-column.justify-content-between.p-3
+          h4.text-primary 海洋總動員
+          .card-text.d-flex.justify-content-between.text-secondary
+            span 09:00 ~ 09:30
+            span 成人 1 / 兒童 2
+      .d-flex.mx-n1.mt-auto
+        button.btn.btn-lg.btn-primary.flex-fill.mx-1(type="button", @click="btnShare") 分享行程
+        a.btn.btn-lg.btn-primary.flex-fill.mx-1(href="page-2-1.html") 新增預約
 
 block script
   script.
