@@ -14,15 +14,39 @@ block content
       h1.mt-5.mb-0.text-primary 2021-12-01
       .text-primary 入園人數：5
       .mt-5 已預約設施 #[span.badge.badge-pill.badge-info 5 項]
-      a(href="page-2-4.html"): .card.border-white.shadow-sm.mt-2
-        .card-body.d-flex.flex-column.justify-content-between.p-3
+      .card.border-white.shadow-sm.mt-2(@click="btnDel")
+        .card-body.d-flex.flex-column.justify-content-between.p-2
           h4.text-primary 海洋總動員
           .card-text.d-flex.justify-content-between.text-secondary
-            span 09:00 ~ 09:30
+            .list-style-tcap 09:00 ~ 09:30
             span 成人 1 / 兒童 2
+      .card.border-white.shadow-sm.mt-2(@click="btnDel")
+        .card-body.d-flex.flex-column.justify-content-between.p-2
+          h4.text-primary 摩天輪
+          .card-text.d-flex.justify-content-between.text-secondary
+            .list-style-tcap 10:15 ~ 10:30
+            span 成人 2 / 兒童 2
+      .card.border-white.shadow-sm.mt-2(@click="btnDel")
+        .card-body.d-flex.flex-column.justify-content-between.p-2
+          h4.text-primary 飛天神奇號
+          .card-text.d-flex.justify-content-between.text-secondary
+            .list-style-tcap 11:00 ~ 11:45
+            span 成人 2 / 兒童 2
+      .card.border-white.shadow-sm.mt-2(@click="btnDel")
+        .card-body.d-flex.flex-column.justify-content-between.p-2
+          h4.text-primary 星空小飛碟
+          .card-text.d-flex.justify-content-between.text-secondary
+            .list-style-tcap 14:00 ~ 14:25
+            span 成人 2 / 兒童 2
+      .card.border-white.shadow-sm.mt-2(@click="btnDel")
+        .card-body.d-flex.flex-column.justify-content-between.p-2
+          h4.text-primary 碰碰車
+          .card-text.d-flex.justify-content-between.text-secondary
+            .list-style-tcap 15:00 ~ 15:25
+            span 兒童 2
       .d-flex.mx-n1.mt-auto
-        button.btn.btn-lg.btn-primary.flex-fill.mx-1(type="button", @click="btnShare") 分享行程
-        a.btn.btn-lg.btn-primary.flex-fill.mx-1(href="page-2-1.html") 新增預約
+        button.btn.btn-lg.btn-primary.flex-fill.mx-1.mt-2(type="button", @click="btnShare") 分享行程
+        a.btn.btn-lg.btn-primary.flex-fill.mx-1.mt-2(href="page-2-1.html") 設施預約
 
 block script
   script.
@@ -37,6 +61,21 @@ block script
           url.searchParams.set('redirect', window.encodeBase64url('/tcap/page-1-9.html'))
           location.href = url.href
           return await new Promise(resolve => {}) // 不會結束的 Promise
+        },
+        async btnDel () {
+          const yn = await Swal.fire({
+            cancelButtonColor: '#6c757d',
+            cancelButtonText: '否',
+            confirmButtonColor: '#dc3545',
+            confirmButtonText: '是',
+            focusCancel: true,
+            html: `<h5 class="text-blue">魔法星際飛車(雲霄飛車)</h5><div class="text-gray-light">入園日期：2021-12-01<br>場次時間：09:00 ~ 09:30<br>成人：2 位<br>兒童：2 位</div>`,
+            reverseButtons: true,
+            showCancelButton: true,
+            title: '取消設施預約',
+            customClass: { content: 'text-left' },
+          })
+          if (!yn.value) return
         },
       },
     })
