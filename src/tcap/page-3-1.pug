@@ -27,7 +27,7 @@ block style
           height: 40px
           position: absolute
           top: -20px
-          width: 40px
+          width: 45px
           z-index: 1
           &.circle-left
             left: -25px
@@ -127,34 +127,53 @@ block script
         async btnCheckin () {
           const result = await Swal.fire({
             cancelButtonText: '取消',
-            denyButtonText: '入園',
+            confirmButtonColor: '#dc3545',
+            confirmButtonText: '確定',
             icon: 'warning',
+            focusCancel: true,
             showCancelButton: true,
-            showConfirmButton: false,
-            showDenyButton: true,
-            text: '點擊「入園」後，即認定您已入園',
-            title: '請由工作人員操作',
+            text: '核銷按鈕請工作人員點選，如不慎誤觸核銷，請自行負責',
+            title: '核銷入園',
           })
-          if (!result.isDenied) return
+          if (!result.value) return
 
           this.$set(this.order, 'checkin', true)
-          location.href = 'page-3-3.html'
+          this.$set(this.order, 'status', 'checked')
+
+          const lineOA = await Swal.fire({
+            confirmButtonText: '前往 LINE 官方帳號',
+            icon: 'success',
+            text: '入園成功，感謝您的支持',
+            title: '恭喜入園',
+          })
+          if (!lineOA.value) return
+          window.open('https://line.me/R/ti/p/#{lineatOaId}')
         },
         async btnOrderDel () {
           const order = this.order
-          const text = order.status === 'expired' ? `是否要刪除 ${order.date} 的入園證明？` : `是否要取消 ${order.date} 的入園預約？`
+          const isExpired = order.status === 'expired'
           const result = await Swal.fire({
-            cancelButtonColor: '#007bff',
-            cancelButtonText: '否',
+            cancelButtonText: '取消',
             confirmButtonColor: '#dc3545',
-            confirmButtonText: '是',
+            confirmButtonText: '確定',
             focusCancel: true,
             icon: 'warning',
             showCancelButton: true,
-            text,
+            text: isExpired ? '請問您確定要刪除此次的入園資訊嗎？' : '請問您確定要取消此次的入園預約嗎？',
           })
           if (!result.value) return
-          location.href = 'page-4-2.html'
+
+          const lineOA = await Swal.fire({
+            confirmButtonText: '前往 LINE 官方帳號',
+            icon: 'success',
+            text: isExpired ? '刪除 入園資訊 成功' : '取消 入園預約 成功',
+            title: isExpired ? '成功刪除' : '成功取消',
+          })
+          if (!lineOA.value) {
+            location.href = 'page-1-4.html'
+            return
+          }
+          window.open('https://line.me/R/ti/p/#{lineatOaId}')
         },
         async btnShare () {
           const url = new URL('https://liff.line.me/#{liffidTcap}')
