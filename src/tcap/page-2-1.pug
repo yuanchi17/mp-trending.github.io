@@ -4,6 +4,8 @@ block style
   meta(property="og:url", content=`${baseurl}tcap/`)
   style
     :sass
+      body
+        background-color: #F2F6F9
       .text-clamp-2
         display: -webkit-box
         -webkit-line-clamp: 2
@@ -13,7 +15,7 @@ block style
 block content
   #app(v-cloak)
     .container.py-3.d-flex.flex-column.vh-100
-      h2.text-center 設施說明
+      h2.text-center.title-style 設施說明
       .radio1.mt-2
         .custom-control.custom-radio.custom-control-inline
           input#radio1-0.custom-control-input(type="radio", name="radio1", value="0")
@@ -24,11 +26,18 @@ block content
         .custom-control.custom-radio.custom-control-inline
           input#radio1-110.custom-control-input(type="radio", name="radio1", value="110", checked)
           label.custom-control-label(for="radio1-110") 全部
-      select.form-control.form-control-lg.mt-1
-        option 遊樂設施 (編號 1~13)
-        option 遊樂設施 (K系列)
-        option 遊樂場
+      .form-group.mt-1.mb-0
+        select.form-control
+          option 遊樂設施 (編號 1~13)
+          option 遊樂設施 (K系列)
+          option 遊樂場
       .flex-fill.overflow-auto.mt-2
+        .media.mt-2(@click="location.href='page-2-2.html'")
+          img.mr-2(src="https://i.imgur.com/cixUJLi.png", style="width: 150px")
+          .media-body.d-flex.flex-column
+            h6.my-0.text-blue 魔法星際飛車(雲霄飛車)
+            small.text-red 票價：30 元
+            small.text-gray.text-clamp-2 以科幻造型的雲霄飛車，迴旋於軌道上體驗刺激的速度感。
         .media.mt-2(@click="location.href='page-2-2.html'")
           img.mr-2(src="https://i.imgur.com/cixUJLi.png", style="width: 150px")
           .media-body.d-flex.flex-column
@@ -83,12 +92,6 @@ block content
             h6.my-0.text-blue 尋寶船(海盜船)
             small.text-red 票價：30 元
             small.text-gray.text-clamp-2 仿木造古戰船的造型，以左右擺盪凌空飛渡，體驗離心力的刺激感。
-        .media.mt-2(@click="location.href='page-2-2.html'")
-          img.mr-2(src="https://i.imgur.com/cixUJLi.png", style="width: 150px")
-          .media-body.d-flex.flex-column
-            h6.my-0.text-blue 魔法星際飛車(雲霄飛車)
-            small.text-red 票價：30 元
-            small.text-gray.text-clamp-2 以科幻造型的雲霄飛車，迴旋於軌道上體驗刺激的速度感。
         .media.mt-2(@click="location.href='page-2-2.html'")
           img.mr-2(src="https://i.imgur.com/cixUJLi.png", style="width: 150px")
           .media-body.d-flex.flex-column

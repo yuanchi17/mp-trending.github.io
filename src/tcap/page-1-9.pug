@@ -11,71 +11,66 @@ block content
   #app(v-cloak)
     .container.d-flex.flex-column.min-vh-100.py-3
       h2.text-center.title-style 預約設施清單
-      h1.mt-5.mb-0.text-primary 2021-12-01
-      .text-primary 入園人數：5
-      .mt-5 已預約設施 #[span.badge.badge-pill.badge-info 5 項]
-      .card.border-white.shadow-sm.mt-2(@click="btnDel")
+      h1.mt-5.mb-0.text-primary {{ order.date }}
+      .text-primary 入園人數：{{ order.total }}
+      .mt-5 已預約設施 #[span.badge.badge-pill.badge-info {{ order.games.length }} 項]
+      .card.border-white.shadow-sm.mt-2(v-for="(game, gId) of order.games" :key="gId", @click="btnDel(gId)")
         .card-body.d-flex.flex-column.justify-content-between.p-2
-          h4.text-primary 海洋總動員
+          h4.text-primary {{ game.name }}
           .card-text.d-flex.justify-content-between.text-secondary
-            .list-style-tcap 09:00 ~ 09:30
-            span 成人 1 / 兒童 2
-      .card.border-white.shadow-sm.mt-2(@click="btnDel")
-        .card-body.d-flex.flex-column.justify-content-between.p-2
-          h4.text-primary 摩天輪
-          .card-text.d-flex.justify-content-between.text-secondary
-            .list-style-tcap 10:15 ~ 10:30
-            span 成人 2 / 兒童 2
-      .card.border-white.shadow-sm.mt-2(@click="btnDel")
-        .card-body.d-flex.flex-column.justify-content-between.p-2
-          h4.text-primary 飛天神奇號
-          .card-text.d-flex.justify-content-between.text-secondary
-            .list-style-tcap 11:00 ~ 11:45
-            span 成人 2 / 兒童 2
-      .card.border-white.shadow-sm.mt-2(@click="btnDel")
-        .card-body.d-flex.flex-column.justify-content-between.p-2
-          h4.text-primary 星空小飛碟
-          .card-text.d-flex.justify-content-between.text-secondary
-            .list-style-tcap 14:00 ~ 14:25
-            span 成人 2 / 兒童 2
-      .card.border-white.shadow-sm.mt-2(@click="btnDel")
-        .card-body.d-flex.flex-column.justify-content-between.p-2
-          h4.text-primary 碰碰車
-          .card-text.d-flex.justify-content-between.text-secondary
-            .list-style-tcap 15:00 ~ 15:25
-            span 兒童 2
-      .d-flex.mx-n1.mt-auto
-        button.btn.btn-lg.btn-primary.flex-fill.mx-1.mt-2(type="button", @click="btnShare") 分享行程
-        a.btn.btn-lg.btn-primary.flex-fill.mx-1.mt-2(href="page-2-1.html") 設施預約
+            .list-style-tcap {{ game.time }}
+            span 成人 {{ game.normal }} / 兒童 {{ game.kid }}
+      .mt-auto
+        a.btn.btn-lg.btn-primary.btn-block.flex-fill.mt-2(href="page-2-1.html") 設施預約
+        .d-flex.mx-n1
+          a.btn.btn-lg.btn-primary.flex-fill.mx-1.mt-2(href="page-1-4.html") 預約紀錄
+          button.btn.btn-lg.btn-primary.flex-fill.mx-1.mt-2(type="button", @click="btnShare") 分享行程
 
 block script
   script.
     window.vm = new Vue({
       el: '#app',
+      data: {
+        order: null,
+        h: {},
+      },
+      async mounted () {
+        // 自動儲存功能
+        try {
+          const saved = JSON.parse(localStorage.getItem('tcap'))
+          if (saved) this.$set(this, 'h', { ...this.h, ...saved })
+        } catch (err) {}
+        this.$watch('h', () => {
+          localStorage.setItem('tcap', JSON.stringify(this.h))
+        }, { deep: true })
+
+        this.$set(this, 'order', _.find(this.h.orders, { date: window.param('date') }) || this.h.orders[0])
+      },
       methods: {
         async btnAlert () {
           await Swal.fire({ html: '1.請依預約場次於開場前二十分鐘至五分鐘內，全員到齊完成報到程序，逾時視同放棄。<br>2.兒童身高限制在90-150以內，需要成年人陪同。<br>3.入場前請詳細閱讀場地使用限制與安全事項。' })
         },
         async btnShare () {
-          const url = new URL('https://liff.line.me/#{liffidTcap}')
+          const url = new URL('https://liff.line.me/#{liffidFull}')
           url.searchParams.set('redirect', window.encodeBase64url('/tcap/page-1-9.html'))
           location.href = url.href
           return await new Promise(resolve => {}) // 不會結束的 Promise
         },
-        async btnDel () {
+        async btnDel (gId) {
           const yn = await Swal.fire({
             cancelButtonColor: '#6c757d',
             cancelButtonText: '否',
             confirmButtonColor: '#dc3545',
             confirmButtonText: '是',
             focusCancel: true,
-            html: `<h5 class="text-blue">魔法星際飛車(雲霄飛車)</h5><div class="text-gray-light">入園日期：2021-12-01<br>場次時間：09:00 ~ 09:30<br>成人：2 位<br>兒童：2 位</div>`,
+            html: '<h5 class="text-blue">魔法星際飛車(雲霄飛車)</h5><div class="text-gray-light">入園日期：2021-10-20<br>場次時間：09:20 ~ 09:30<br>成人：2 位<br>兒童：2 位</div>',
             reverseButtons: true,
             showCancelButton: true,
-            title: '取消設施預約',
+            title: '<h2 class="title-style">取消設施預約</h2>',
             customClass: { content: 'text-left' },
           })
           if (!yn.value) return
+          this.order.games.splice(gId, 1)
         },
       },
     })

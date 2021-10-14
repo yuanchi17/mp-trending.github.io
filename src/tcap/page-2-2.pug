@@ -2,11 +2,15 @@ extends /layout/tcap
 
 block style
   meta(property="og:url", content=`${baseurl}tcap/`)
+  style
+    :sass
+      body
+        background-color: #F2F6F9
 
 block content
   #app(v-cloak)
     .container.py-3.d-flex.flex-column.min-vh-100
-      h3.text-center 魔法星際飛車(雲霄飛車)
+      h3.text-center.title-style 魔法星際飛車(雲霄飛車)
       img.w-100.mt-3(src="https://i.imgur.com/cixUJLi.png")
       p.text-gray.mt-3.mb-0 以科幻造型的雲霄飛車，迴旋於軌道上體驗刺激的速度感。
       h5.text-blue.mt-3.mb-0 單次票價：30元
@@ -21,15 +25,17 @@ block content
       .form-group.mt-3.mb-0
         label.text-blue 我要預約
         select.form-control
-          option 請選擇
+          option 請選擇時段
+          option 09:20 ~ 09:30
+          option 09:30 ~ 09:40
       .ticket.d-flex.flex-column
         .d-flex.mt-2.align-items-center(v-for="ticket of tickets")
           .flex-fill.mr-1.ticket-title.text-blue {{ ticket.title }}
           .ticket-amount
-            .input-group.input-group-lg
-              .input-group-prepend: button.btn.btn-outline-secondary(type="button", @click="ticket.amount--", :disabled="ticket.amount < 1"): i.fa.fa-minus
+            .input-group
+              .input-group-prepend: button.btn.btn-primary(type="button", @click="ticket.amount--", :disabled="ticket.amount < 1"): i.fa.fa-minus
               input.form-control.text-center(type="number", min="0", max="10", v-model.number="ticket.amount")
-              .input-group-append: button.btn.btn-outline-secondary(type="button", @click="ticket.amount++", :disabled="ticket.amount > 9"): i.fa.fa-plus
+              .input-group-append: button.btn.btn-primary(type="button", @click="ticket.amount++", :disabled="ticket.amount > 9"): i.fa.fa-plus
       .d-flex.mt-3
         a.btn.btn-lg.btn-outline-primary(href="page-1-9.html") 回上頁
         button.btn.btn-lg.btn-primary.flex-fill.ml-2(type="button", @click="btnSuccess") 新增預約
@@ -43,16 +49,32 @@ block script
           { title: '成人', amount: 0 },
           { title: '兒童', amount: 0 },
         ],
+        h: {},
+      },
+      async mounted () {
+        // 自動儲存功能
+        try {
+          const saved = JSON.parse(localStorage.getItem('tcap'))
+          if (saved) this.$set(this, 'h', { ...this.h, ...saved })
+        } catch (err) {}
+        this.$watch('h', () => {
+          localStorage.setItem('tcap', JSON.stringify(this.h))
+        }, { deep: true })
       },
       methods: {
         async btnSuccess () {
+          const tmp = _.find(this.h.orders, { date: '2021-10-20' }) || this.h.orders[0]
+          const tickets = this.tickets
           await Swal.fire({
-            html: `<h5 class="text-blue">魔法星際飛車(雲霄飛車)</h5><div class="text-gray-light">入園日期：2021-12-01<br>場次時間：09:00 ~ 09:30<br>成人：2 位<br>兒童：2 位</div>`,
+            html: `<h5 class="text-blue">魔法星際飛車(雲霄飛車)</h5><div class="text-gray-light">入園日期：${tmp.date}<br>場次時間：09:20 ~ 09:30<br>成人：${tickets[0].amount} 位<br>兒童：${tickets[1].amount} 位</div>`,
             icon: 'success',
-            title: '設施預約成功',
+            title: '<h2 class="title-style">設施預約成功</h2>',
             customClass: { content: 'text-left' },
           })
-          location.href = 'page-1-9.html'
+          tmp.games = [
+            { name: '魔法星際飛車', time: '09:20 ~ 09:30', normal: tickets[0].amount, kid: tickets[1].amount },
+          ]
+          location.href = 'page-1-9.html?' + window.httpBuildQuery({ date: '2021-10-20' })
         },
       },
     })
