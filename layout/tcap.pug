@@ -1,7 +1,7 @@
 -
   const cachebust = Date.now()
-  let title = '微程式資訊 創新前瞻計畫室'
-  let description = '微程式資訊 創新前瞻計畫室。'
+  let title = '臺北市立兒童新樂園'
+  let description = '臺北市立兒童新樂園。'
 doctype html
 block beforehtml
 html
@@ -13,7 +13,7 @@ html
     meta(name="description", content=description)
     meta(property="og:description", content=description)
     meta(property="og:locale", content="zh_TW")
-    meta(property="og:site_name", content="微程式資訊 創新前瞻計畫室")
+    meta(property="og:site_name", content="臺北市立兒童新樂園")
     meta(property="og:title", content=title)
     meta(property="og:type", content="website")
     block meta
@@ -22,24 +22,75 @@ html
     link(rel="stylesheet", href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap")
     style
       :sass
+        @mixin size($w, $h:$w, $bdrs:0)
+          width: $w
+          height: $h
+          border-radius: $bdrs
         [v-cloak]
           display: none
         body, .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6
           font-family: 'Noto Sans TC', sans-serif
+        .title-style
+          color: #21205B
+          font-weight: 600
+        .text-blue
+          color: #4478DD
+        .text-gray
+          color: rgb(112,112,112)
+        .text-gray-light
+          color: rgba(112,112,112,.6)
+        .text-red
+          color: #DC3545
+        #ticket.card
+          box-shadow: 0 10px 8px rgba(0, 0, 0, .08)
+          border: none
+          position: relative
+          border-radius: 8px 8px 0px 0px
+          &::before
+            content: ''
+            background: url('https://tyda.azurewebsites.net/_test_lineTcap/line_border.png') repeat bottom left
+            position: absolute
+            bottom: -10px
+            +size(100%,15px)
+          & .line
+            +size(100%, 40px)
+            background: url('https://i.imgur.com/YQew3zZ.png') repeat-x center center
+            &::before, &::after
+              content: ''
+              position: absolute
+              background: #F2F6F9
+              +size(40px, 40px, 100%)
+            &::before
+              left: -20px
+              box-shadow: inset -5px 0 5px rgba(black,.04)
+            &::after
+              right: -20px
+              box-shadow: inset 6px 0 6px rgba(black,.04)
+        .list-style-tcap
+          display: block
+          margin-left: 1.25rem
+          position: relative
+          &::before
+            background: no-repeat center/contain url('https://i.imgur.com/P0m3FSx.png')
+            content: ''
+            display: block
+            height: 1rem
+            left: -1.25rem
+            top: .3rem
+            position: absolute
+            width: 1rem
     block style
   body
     include /component/livereload
     include /component/vconsole
-    block compoment-gtag4
-      include /component/gtag4
     block content
-    script(crossorigin="anonymous", src="https://static.line-scdn.net/liff/edge/2/sdk.js")
     script(crossorigin="anonymous", src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js")
     script(crossorigin="anonymous", src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js")
     script(crossorigin="anonymous", src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js")
     script(crossorigin="anonymous", src="https://cdn.jsdelivr.net/npm/js-base64@2/base64.min.js")
     script(crossorigin="anonymous", src="https://cdn.jsdelivr.net/npm/json5@2/dist/index.min.js")
     script(crossorigin="anonymous", src="https://cdn.jsdelivr.net/npm/lodash@4/lodash.min.js")
+    script(crossorigin="anonymous", src="https://cdn.jsdelivr.net/npm/moment@2/moment.min.js")
     script(crossorigin="anonymous", src="https://cdn.jsdelivr.net/npm/popper.js@1/dist/umd/popper.min.js")
     script(crossorigin="anonymous", src="https://cdn.jsdelivr.net/npm/qs@6/dist/qs.min.js")
     script(crossorigin="anonymous", src="https://cdn.jsdelivr.net/npm/sweetalert2@10")

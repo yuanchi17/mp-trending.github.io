@@ -1,0 +1,80 @@
+extends /layout/tcap
+
+block style
+  meta(property="og:url", content=`${baseurl}tcap/`)
+  style
+    :sass
+      .ticket
+        .ticket-amount
+          min-width: 7rem
+
+block content
+  #app(v-cloak)
+    .container.d-flex.flex-column.min-vh-100.py-3
+      h1.text-center 選擇日期與人數
+      table.table.table-bordered.calendar.text-center.mt-3
+        thead.table-sm
+          tr: th(colspan="7") {{ dayjs().utcOffset(8).startOf('month').add(monthOffset, 'month').format('YYYY/MM') }}
+          tr: th(v-for="weekname in '日一二三四五六'") {{ weekname }}
+        tbody
+          tr(v-for="row in calendarCeils")
+            template(v-for="ceil in row")
+              td.table-primary.text-primary(v-if="selected === ceil.value") {{ ceil.date }}
+              td.text-primary(v-else-if="ceil.type === 'enable'", @click="selected = ceil.value") {{ ceil.date }}
+              td.text-muted(v-else-if="ceil.type === 'disable'") {{ ceil.date }}
+              td(v-else)
+      .ticket.d-flex.flex-column
+        .d-flex.mt-2.align-items-center(v-for="ticket of tickets")
+          .flex-fill.mr-1 {{ ticket.name }}
+          .ticket-amount
+            .input-group.input-group-sm
+              .input-group-prepend: button.btn.btn-outline-secondary(type="button", @click="ticket.amount--", :disabled="ticket.amount < 1"): i.fa.fa-minus-circle
+              input.form-control.text-center(type="number", min="0", max="10", v-model.number="ticket.amount")
+              .input-group-append: button.btn.btn-outline-secondary(type="button", @click="ticket.amount++", :disabled="ticket.amount > 9"): i.fa.fa-plus-circle
+      .mt-auto.mb-3
+        a.btn.btn-secondary.btn-block.mt-3(href="page-1-8.html") 下一步
+
+block script
+  script(crossorigin="anonymous", src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js")
+  script(crossorigin="anonymous", src="https://cdn.jsdelivr.net/npm/dayjs/plugin/utc.min.js")
+  script.
+    /* global dayjs_plugin_utc */
+    dayjs.extend(dayjs_plugin_utc)
+    window.vm = new Vue({
+      el: '#app',
+      data: {
+        monthOffset: 0,
+        selected: dayjs().utcOffset(8).startOf('day').format('YYYY-MM-DD'),
+        tickets: [
+          { name: '全票 - NT$30', amount: 0 },
+          { name: '優待票(學生或7~12歲兒童) - NT$15', amount: 0 },
+          { name: '免費票(長者或愛心及陪伴者) - NT$0', amount: 0 },
+          { name: '免費票(6歲以下幼童) - NT$0', amount: 0 },
+          { name: '免費票(其他) - NT$0', amount: 0 },
+        ],
+      },
+      computed: {
+        calendarCeils () {
+          return this.getCalendarCeils(this.monthOffset)
+        },
+      },
+      methods: {
+        getCalendarCeils (monthOffset = 0) {
+          const today = dayjs().utcOffset(8).startOf('day')
+          const startOfMonth = dayjs().utcOffset(8).startOf('month').add(monthOffset, 'month')
+          const endOfMonth = startOfMonth.clone().endOf('month')
+          const fnEmptyCeil = () => ({ type: 'blank' })
+          console.log(`today = ${today.format('YYYY-MM-DD')}, startOfMonth = ${startOfMonth.format('YYYY-MM-DD')}, endOfMonth = ${endOfMonth.format('YYYY-MM-DD')}`)
+          const ceils = _.times(startOfMonth.day(), fnEmptyCeil)
+          for (let i = startOfMonth.clone(); i <= endOfMonth; i = i.add(1, 'day')) {
+            ceils.push({
+              date: i.date(),
+              type: i >= today ? 'enable' : 'disable',
+              value: i.format('YYYY-MM-DD'),
+            })
+          }
+          if (ceils.length % 7) ceils.push(..._.times(7 - ceils.length % 7, fnEmptyCeil))
+          return _.chunk(ceils, 7)
+        },
+      },
+    })

@@ -1,0 +1,27 @@
+extends /layout/tcap
+
+block style
+  meta(property="og:url", content=`${baseurl}tcap/`)
+
+block content
+  #app(v-cloak)
+    a(:href="redirect")
+      img.w-100(src="https://i.imgur.com/wWohjp7.jpeg")
+
+block script
+  script.
+    window.vm = new Vue({
+      el: '#app',
+      data: {
+        redirect: '',
+      },
+      async mounted () {
+        this.redirect = this.param('redirect')
+      },
+      methods: {
+        param (key, defaultValue) {
+          const val = new URL(location).searchParams.get(key)
+          return _.isNil(val) ? defaultValue : val
+        },
+      },
+    })
