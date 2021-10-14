@@ -68,10 +68,10 @@ block content
               .ticket-title.text-blue {{ ticket.title }}
               small.text-gray-light ({{ ticket.type }})
             .ticket-amount
-              .input-group.input-group-lg
-                .input-group-prepend: button.btn.btn-outline-secondary(type="button", @click="ticket.amount--", :disabled="ticket.amount < 1"): i.fa.fa-minus
+              .input-group
+                .input-group-prepend: button.btn.btn-primary(type="button", @click="ticket.amount--", :disabled="ticket.amount < 1"): i.fa.fa-minus
                 input.form-control.text-center(type="number", min="0", max="10", v-model.number="ticket.amount")
-                .input-group-append: button.btn.btn-outline-secondary(type="button", @click="ticket.amount++", :disabled="ticket.amount > 9"): i.fa.fa-plus
+                .input-group-append: button.btn.btn-primary(type="button", @click="ticket.amount++", :disabled="ticket.amount > 9"): i.fa.fa-plus
         .mt-auto.mb-3
           button.btn.btn-lg.btn-primary.btn-block.mt-3(type="button", @click="btnSubmit") 下一步
 

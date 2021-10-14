@@ -86,7 +86,7 @@ block script
           localStorage.setItem('tcap', JSON.stringify(this.h))
         }, { deep: true })
 
-        this.$set(this, 'oId', this.param('oId', 0))
+        this.$set(this, 'oId', window.param('oId', 0))
         this.$set(this, 'order', this.h.orders[this.oId])
       },
       methods: {
@@ -99,7 +99,7 @@ block script
             focusCancel: true,
             showCancelButton: true,
             text: '核銷按鈕請工作人員點選，如不慎誤觸核銷，請自行負責',
-            title: '<h2 class="title-stlye">核銷入園</h2>',
+            title: '<h2 class="title-style">核銷入園</h2>',
           })
           if (!result.value) return
 
@@ -107,13 +107,17 @@ block script
           this.$set(this.order, 'status', 'checked')
 
           const lineOA = await Swal.fire({
+            cancelButtonColor: '#4478dd',
+            cancelButtonText: '確定',
+            confirmButtonColor: '#4478dd',
+            showCancelButton: true,
             confirmButtonText: '前往 LINE 官方帳號',
             icon: 'success',
             text: '入園成功，感謝您的支持',
-            title: '<h2 class="title-stlye">恭喜入園</h2>',
+            title: '<h2 class="title-style">恭喜入園</h2>',
           })
           if (!lineOA.value) return
-          window.open('https://line.me/R/ti/p/#{lineatOaId}')
+          window.open('https://lihi1.com/cYlDy')
         },
         async btnOrderDel () {
           const order = this.order
@@ -131,26 +135,26 @@ block script
           this.h.orders.splice(this.oId, 1)
 
           const lineOA = await Swal.fire({
+            cancelButtonColor: '#4478dd',
+            cancelButtonText: '確定',
+            confirmButtonColor: '#4478dd',
             confirmButtonText: '前往 LINE 官方帳號',
             icon: 'success',
+            showCancelButton: true,
             text: isExpired ? '刪除 入園資訊 成功' : '取消 入園預約 成功',
-            title: `<h2 class="title-stlye">${isExpired ? '成功刪除' : '成功取消'}</h2>`,
+            title: `<h2 class="title-style">${isExpired ? '成功刪除' : '成功取消'}</h2>`,
           })
           if (!lineOA.value) {
             location.href = 'page-1-4.html'
             return
           }
-          window.open('https://line.me/R/ti/p/#{lineatOaId}')
+          window.open('https://lihi1.com/cYlDy')
         },
         async btnShare () {
-          const url = new URL('https://liff.line.me/#{liffidTcap}')
+          const url = new URL('https://liff.line.me/#{liffidFull}')
           url.searchParams.set('redirect', window.encodeBase64url('/tcap/page-3-1.html'))
           location.href = url.href
           return await new Promise(resolve => {}) // 不會結束的 Promise
-        },
-        param (key, defaultValue) {
-          const val = new URL(location).searchParams.get(key)
-          return _.isNil(val) ? defaultValue : val
         },
       },
     })

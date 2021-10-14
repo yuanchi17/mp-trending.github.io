@@ -63,3 +63,8 @@ window.parseJsonOrDefault = (str, defaultValue) => {
     return defaultValue
   }
 }
+
+window.param = (key, defaultValue) => {
+  const val = new URL(location).searchParams.get(key)
+  return _.isNil(val) ? defaultValue : val
+}

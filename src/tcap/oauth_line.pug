@@ -16,12 +16,6 @@ block script
         redirect: '',
       },
       async mounted () {
-        this.redirect = this.param('redirect')
-      },
-      methods: {
-        param (key, defaultValue) {
-          const val = new URL(location).searchParams.get(key)
-          return _.isNil(val) ? defaultValue : val
-        },
+        this.redirect = window.param('redirect')
       },
     })

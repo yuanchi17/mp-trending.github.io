@@ -16,7 +16,7 @@ block style
 block content
   #app.container.d-flex.flex-column.min-vh-100(v-cloak)
     h2.my-3.text-center.title-style 預約紀錄
-    .card.my-2(v-if="orders.length", v-for="(order, oId) of orders", :key="order.date")
+    .card.my-2(v-for="(order, oId) of orders", :key="order.date")
       .card-body
         .d-flex.mb-2(@click="order.expand = !order.expand")
           h4.mb-0.card-title.text-blue {{ order.date }}
@@ -31,8 +31,8 @@ block content
           p.m-0.text-gary 已預約設施
           span.ml-auto.text-gary {{ order.games.length || 0 }} 項
         .d-flex.text-gray.mx-n1.mt-3(v-if="order.expand")
-          a.mx-1.my-0.btn.btn-block.btn-outline-primary(@click="btnDetail(oId)") 詳細資料
-          a.mx-1.my-0.btn.btn-block.btn-outline-primary(href="page-1-9.html", v-if="order.status !== 'expired'") 預約設施
+          button.mx-1.my-0.btn.btn-block.btn-outline-primary(type="button", @click="btnDetail(oId)") 詳細資料
+          button.mx-1.my-0.btn.btn-block.btn-outline-primary(type="button", @click="btnAddGame(order.date)", v-if="order.status !== 'expired'") 預約設施
     p.my-2.text-center.text-gray-light 這裡是您的預約紀錄，快點選「新增預約」或「預約設施」來安排行程吧！
     button.my-3.mt-auto.btn.btn-lg.btn-block.btn-primary(type="button", @click="btnAddOrder") 新增預約
 
@@ -69,13 +69,12 @@ block script
       },
       methods: {
         cpuOrderStatus ({ now, order }) {
-          const total = _.sum(_.values(order.tickets))
           const date = moment(order.date)
           const expired = date.clone().add(1, 'day')
-          if (order.checkin) return { total, status: 'checked' } // 已入園
-          if (now > expired) return { total, status: 'expired' } // 已過期
-          if (date < now) return { total, status: 'normal' } // 待入園
-          return { total, status: 'early' } // 不可入園
+          if (order.checkin) return { status: 'checked' } // 已入園
+          if (now > expired) return { status: 'expired' } // 已過期
+          if (date < now) return { status: 'normal' } // 待入園
+          return { status: 'early' } // 不可入園
         },
         async btnAddOrder () {
           const result = await Swal.fire({
@@ -88,7 +87,7 @@ block script
             <li class="text-left mb-2">兒童身高限制在 90-150 以內，需要成年人陪同。</li>
             <li class="text-left">入場前請詳細閱讀場地使用限制與安全事項。</li>
             </ol>`,
-            title: '<h2 class="title-stlye">預約說明</h2>',
+            title: '<h2 class="title-style">預約說明</h2>',
             customClass: {
               content: 'px-0',
             },
@@ -98,6 +97,9 @@ block script
         },
         btnDetail (oId) {
           location.href = 'page-3-1.html?' + window.httpBuildQuery({ oId })
+        },
+        btnAddGame (date) {
+          location.href = 'page-1-9.html?' + window.httpBuildQuery({ date })
         },
       },
     })

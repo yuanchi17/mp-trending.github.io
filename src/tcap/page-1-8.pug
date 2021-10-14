@@ -93,6 +93,7 @@ block script
             ctx: this.ctx,
             expand: false,
             games: [],
+            total: _.sum(_.values(this.h.submit.tickets)),
           })
           this.$set(this.h, 'orders', [
             ..._.get(this.h, 'orders', []),
