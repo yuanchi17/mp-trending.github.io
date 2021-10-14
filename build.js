@@ -19,8 +19,6 @@ exports.build = async () => {
     NODE_ENV: getenv('NODE_ENV', 'production'),
     ..._.fromPairs(_.map([
       'LIFFID_FULL',
-      'LIFFID_TCAP',
-      'LINEAT_OA_ID',
     ], k => [_.camelCase(k), getenv(k)])),
   }
 

@@ -51,7 +51,7 @@ block script
           await Swal.fire({ html: '1.請依預約場次於開場前二十分鐘至五分鐘內，全員到齊完成報到程序，逾時視同放棄。<br>2.兒童身高限制在90-150以內，需要成年人陪同。<br>3.入場前請詳細閱讀場地使用限制與安全事項。' })
         },
         async btnShare () {
-          const url = new URL('https://liff.line.me/#{liffidFull}')
+          const url = new URL('https://liff.line.me/#{liffidFull}/tcap-share.html')
           url.searchParams.set('redirect', window.encodeBase64url('/tcap/page-1-9.html'))
           location.href = url.href
           return await new Promise(resolve => {}) // 不會結束的 Promise

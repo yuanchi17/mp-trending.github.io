@@ -6,7 +6,7 @@ block beforehtml
     description = '臺北市立兒童新樂園。'
 
 block style
-  meta(property="og:url", content=`https://liff.line.me/${liffidTcap}/tcap-share.html`)
+  meta(property="og:url", content=`https://liff.line.me/${liffidFull}/tcap-share.html`)
   style
     :sass
       body
@@ -16,7 +16,7 @@ block script
   include /component/helpers.pug
   script.
     const loginPromise = (async () => {
-      await liff.init({ liffId: '#{liffidTcap}' })
+      await liff.init({ liffId: '#{liffidFull}' })
       if (!liff.isLoggedIn()) {
         liff.login({ redirectUri: location.href })
         return await new Promise(resolve => {}) // 永遠不會結束的 Promise
