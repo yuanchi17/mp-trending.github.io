@@ -35,7 +35,7 @@ block content
             button.mx-1.my-0.btn.btn-block.btn-outline-primary(type="button", @click="btnDetail(order.date)") 詳細資料
             button.mx-1.my-0.btn.btn-block.btn-outline-primary(type="button", @click="btnAddGame(order.date)", v-if="order.status !== 'expired'") 預約設施
       p.my-2.text-center.text-gray-light 這裡是您的預約紀錄，快點選「新增預約」或「預約設施」來安排行程吧！
-      button.my-3.mt-auto.btn.btn-lg.btn-block.btn-primary(type="button", @click="btnAddOrder") 新增預約
+      button.my-3.btn.btn-lg.btn-block.btn-primary(type="button", @click="btnAddOrder") 新增預約
 
 block script
   script.

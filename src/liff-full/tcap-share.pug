@@ -53,8 +53,7 @@ block script
           await this.btnShare()
           const redirect = localStorage.getItem('tcap-redirect') || '/tcap/page-1-4.html'
           localStorage.removeItem('tcap-redirect')
-          location.href = `${location.origin}${redirect}`
-          return await new Promise(resolve => {}) // 不會結束的 Promise
+          liff.openWindow({ external: true, url: `${location.origin}${redirect}` })
         },
         async initTpl () {
           const tpl = '/tpl/tcap-share.txt'
@@ -71,7 +70,7 @@ block script
             const profile = await loginPromise
             const msgs = this.getRenderedMsgs({
               profile,
-              url: new URL(`${location.origin}/tcap/page-6-1.html`),
+              url: new URL(`${location.origin}/tcap/page-6-1.html?openExternalBrowser=1`),
             })
             const beforeShare = Date.now()
             const res = await liff.shareTargetPicker(msgs)
