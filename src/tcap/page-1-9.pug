@@ -59,14 +59,13 @@ block script
         async btnDel (gId) {
           const yn = await Swal.fire({
             cancelButtonColor: '#6c757d',
-            cancelButtonText: '否',
+            cancelButtonText: '返回',
             confirmButtonColor: '#dc3545',
-            confirmButtonText: '是',
+            confirmButtonText: '取消設施預約',
             focusCancel: true,
-            html: '<h5 class="text-blue">魔法星際飛車(雲霄飛車)</h5><div class="text-gray-light">入園日期：2021-10-20<br>場次時間：09:20 ~ 09:30<br>成人：2 位<br>兒童：2 位</div>',
-            reverseButtons: true,
+            html: '<div class="text-gray-light">入園日期：2021-10-20<br>場次時間：09:20 ~ 09:30<br>成人：2 位<br>兒童：2 位</div>',
             showCancelButton: true,
-            title: '<h2 class="title-style">取消設施預約</h2>',
+            title: '<h2 class="title-style">魔法星際飛車</h2>',
             customClass: { content: 'text-left' },
           })
           if (!yn.value) return

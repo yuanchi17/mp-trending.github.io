@@ -72,7 +72,9 @@ block content
         p.text-gray.mb-0.mt-2 電話：{{ order.ctx.phone}}
         p.text-gray.mb-0.mt-2 Email：{{ order.ctx.email}}
         .mt-auto.mb-3
-          button.btn.btn-lg.btn-primary.btn-block.mt-3(type="button", @click="btnAddGame(order.date)") 設施預約
+          .row.d-flex.mx-n1.mt-2
+            .col-6.px-1: a.btn.btn-lg.btn-primary.btn-block(href="page-1-4.html") 預約紀錄
+            .col-6.px-1: button.btn.btn-lg.btn-primary.btn-block(type="button", @click="btnAddGame(order.date)") 設施預約
 
 block script
   script.
