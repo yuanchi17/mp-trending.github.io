@@ -3,7 +3,7 @@ function renderCard (ctx) {
   const { profile, url } = ctx
   return {
     type: 'flex',
-    altText: `${profile.displayName}邀你一同暢玩兒童新樂園`,
+    altText: `${profile.displayName}邀你一起暢玩兒童新樂園`,
     contents: {
       type: 'bubble',
       header: {
@@ -34,7 +34,7 @@ function renderCard (ctx) {
               {
                 color: '#ffffff',
                 size: 'sm',
-                text: '邀你一同暢玩',
+                text: '邀你一起暢玩',
                 type: 'text'
               },
               {
@@ -70,7 +70,7 @@ function renderCard (ctx) {
         contents: [
           {
             type: 'text',
-            text: `${profile.displayName}邀請你一起來玩兒童新樂園，點選一塊暢玩，取得預約設施資格。`,
+            text: `${profile.displayName}邀請你一起來玩兒童新樂園，點選一起暢玩，取得預約設施資格。`,
             size: 'md',
             wrap: true
           }
@@ -88,7 +88,7 @@ function renderCard (ctx) {
             type: 'button',
             action: {
               type: 'uri',
-              label: '一同暢玩',
+              label: '一起暢玩',
               uri: url,
             }
           }

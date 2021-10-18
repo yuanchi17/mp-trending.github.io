@@ -76,11 +76,11 @@ block script
             const res = await liff.shareTargetPicker(msgs)
             const afterShare = Date.now()
             if (afterShare - beforeShare > 1000 && _.get(res, 'status') !== 'success') throw new Error('您已取消分享')
-            await Swal.fire({ icon: 'success', title: '分票成功', text: '祝你們玩得愉快' })
+            await Swal.fire({ icon: 'success', title: '分享行程成功', text: '祝你們玩得愉快' })
           } catch (err) {
             err.message = _.get(err, 'response.data.message', err.message)
             console.error(window.errToPlainObj(err))
-            await Swal.fire({ icon: 'error', title: '分票失敗', text: err.message })
+            await Swal.fire({ icon: 'error', title: '分享行程失敗', text: err.message })
           }
         },
         getRenderedMsgs (options) {

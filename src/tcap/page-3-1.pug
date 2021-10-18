@@ -41,28 +41,28 @@ block content
           p.mb-2.text-gray 姓名：{{ order.ctx.name }}
           p.mb-2.text-gray 電話：{{ order.ctx.phone }}
           p.mb-2.text-gray 電子郵件：{{ order.ctx.email }}
-      .mb-3(v-if="order.status === 'normal'")
-        .row.d-flex.mx-n1.mt-3
-          .col-4.px-1: a.btn.btn-outline-primary.btn-block(href=`${baseurl}tcap/page-1-4.html`) 回上頁
-          .col-8.px-1: button.my-0.btn.btn-block.btn-primary(type="button", @click="btnShare") 分享行程
-        .row.d-flex.mx-n1.mt-2
-          .col-4.px-1: button.my-0.btn.btn-block.btn-outline-secondary(type="button", @click="btnOrderDel") 取消
-          .col-8.px-1: button.my-0.btn.btn-block.btn-danger(type="button", @click="btnCheckin") 核銷入園
-      .mb-3(v-else-if="order.status === 'early'")
+      .mb-3(v-if="order.status === 'early'")
         button.my-0.mt-3.btn.btn-block.btn-primary(type="button", @click="btnShare") 分享行程
         .row.d-flex.mx-n1.mt-2
-          .col-6.px-1: a.btn.btn-outline-primary.btn-block(href=`${baseurl}tcap/page-1-4.html`) 回上頁
-          .col-6.px-1: button.my-0.btn.btn-block.btn-outline-secondary(type="button", @click="btnOrderDel") 取消
+          .col-6.px-1: a.btn.btn-outline-primary.btn-block(href=`${baseurl}tcap/page-1-4.html`) 回上一頁
+          .col-6.px-1: button.my-0.btn.btn-block.btn-outline-secondary(type="button", @click="btnOrderDel") 取消預約
       .mb-3(v-else-if="order.status === 'checked'")
         button.mt-2.btn.btn-block.btn-primary(type="button", @click="btnShare") 分享行程
         .row.d-flex.mx-n1.mt-2
-          .col-6.px-1: a.btn.btn-outline-primary.btn-block(href=`${baseurl}tcap/page-1-4.html`) 回上頁
-          .col-6.px-1: button.btn.btn-block.btn-outline-secondary(type="button", @click="btnOrderDel") 取消
+          .col-6.px-1: a.btn.btn-outline-primary.btn-block(href=`${baseurl}tcap/page-1-4.html`) 回上一頁
+          .col-6.px-1: button.btn.btn-block.btn-outline-secondary(type="button", @click="btnOrderDel") 取消預約
       .mb-3(v-else-if="order.status === 'expired'")
         button.mt-2.btn.btn-block.btn-secondary(type="button", disabled) 已過期
         .row.d-flex.mx-n1.mt-2
-          .col-6.px-1: a.btn.btn-outline-primary.btn-block(href=`${baseurl}tcap/page-1-4.html`) 回上頁
+          .col-6.px-1: a.btn.btn-outline-primary.btn-block(href=`${baseurl}tcap/page-1-4.html`) 回上一頁
           .col-6.px-1: button.btn.btn-block.btn-outline-danger(type="button", @click="btnOrderDel") 刪除紀錄
+      .mb-3(v-else)
+        .row.d-flex.mx-n1.mt-3
+          .col-4.px-1: a.btn.btn-outline-primary.btn-block(href=`${baseurl}tcap/page-1-4.html`) 回上一頁
+          .col-8.px-1: button.my-0.btn.btn-block.btn-primary(type="button", @click="btnShare") 分享行程
+        .row.d-flex.mx-n1.mt-2
+          .col-4.px-1: button.my-0.btn.btn-block.btn-outline-secondary(type="button", @click="btnOrderDel") 取消預約
+          .col-8.px-1: button.my-0.btn.btn-block.btn-danger(type="button", @click="btnCheckin") 核銷入園
 
 block script
   script.
@@ -94,9 +94,9 @@ block script
       methods: {
         async btnCheckin () {
           const result = await Swal.fire({
-            cancelButtonText: '取消',
+            cancelButtonText: '返回',
             confirmButtonColor: '#dc3545',
-            confirmButtonText: '確定',
+            confirmButtonText: '核銷入園',
             icon: 'warning',
             focusCancel: true,
             showCancelButton: true,
@@ -125,7 +125,7 @@ block script
           const order = this.order
           const isExpired = order.status === 'expired'
           const result = await Swal.fire({
-            cancelButtonText: '取消',
+            cancelButtonText: '返回',
             confirmButtonColor: '#dc3545',
             confirmButtonText: '確定',
             focusCancel: true,
