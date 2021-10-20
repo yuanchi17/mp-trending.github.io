@@ -2,7 +2,7 @@ if NODE_ENV !== 'production'
   script.
     (function () {
       const url = new URL(location)
-      const livereload = new URL('https://cdn.jsdelivr.net/npm/livereload-js@3/dist/livereload.js?snipver=1')
+      const livereload = new URL('https://unpkg.com/livereload-js@3/dist/livereload.js?snipver=1')
       livereload.searchParams.set('host', url.hostname)
       if (url.protocol === 'https:') {
         livereload.searchParams.set('port', url.port || 443)

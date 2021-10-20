@@ -18,6 +18,7 @@ exports.build = async () => {
     GA_MEASUREMENT_ID: getenv('GA_MEASUREMENT_ID', 'G-SYT6P9ENET'),
     NODE_ENV: getenv('NODE_ENV', 'production'),
     ..._.fromPairs(_.map([
+      'LIFFID_CARD',
       'LIFFID_FULL',
     ], k => [_.camelCase(k), getenv(k)])),
   }
