@@ -6,16 +6,13 @@ block style
     :sass
       body
         background-color: #F2F6F9
-      .text-clamp-2
-        display: -webkit-box
-        -webkit-line-clamp: 2
-        -webkit-box-orient: vertical
-        overflow: hidden
+      .card-body
+        min-height: 65px
 
 block content
   #app(v-cloak)
-    .container.py-3.d-flex.flex-column.vh-100
-      h2.text-center.title-style 設施說明
+    .container.py-3.d-flex.flex-column.min-vh-100
+      h2.text-center.title-style 選擇設施
       .radio1.mt-2
         .custom-control.custom-radio.custom-control-inline
           input#radio1-0.custom-control-input(type="radio", name="radio1", value="0")
@@ -31,89 +28,119 @@ block content
           option 遊樂設施 (編號 1~13)
           option 遊樂設施 (K系列)
           option 遊樂場
-      .flex-fill.overflow-auto.mt-2
-        .media.mt-2(@click="location.href='page-2-2.html'")
-          img.mr-2(src="https://i.imgur.com/cixUJLi.png", style="width: 150px")
-          .media-body.d-flex.flex-column
-            h6.my-0.text-blue 魔法星際飛車(雲霄飛車)
-            small.text-red 票價：30 元
-            small.text-gray.text-clamp-2 以科幻造型的雲霄飛車，迴旋於軌道上體驗刺激的速度感。
-        .media.mt-2(@click="location.href='page-2-2.html'")
-          img.mr-2(src="https://i.imgur.com/cixUJLi.png", style="width: 150px")
-          .media-body.d-flex.flex-column
-            h6.my-0.text-blue 海洋總動員
-            small.text-red 票價：20 元
-            small.text-gray.text-clamp-2 以海洋生物為載具造型的音樂馬車，上方有多樣臺灣海域之海洋生物彩繪圖案，以增加小朋友的教育認識。
-        .media.mt-2(@click="location.href='page-2-2.html'")
-          img.mr-2(src="https://i.imgur.com/cixUJLi.png", style="width: 150px")
-          .media-body.d-flex.flex-column
-            h6.my-0.text-blue 摩天輪
-            small.text-red 票價：30 元
-            small.text-gray.text-clamp-2 摩天輪直徑40公尺並設有27個座艙，為園區主要地標，搭乘時可鳥瞰臺北盆地之美景。
-        .media.mt-2(@click="location.href='page-2-2.html'")
-          img.mr-2(src="https://i.imgur.com/cixUJLi.png", style="width: 150px")
-          .media-body.d-flex.flex-column
-            h6.my-0.text-blue 銀河號(單軌列車)
-            small.text-red 票價：20 元
-            small.text-gray.text-clamp-2 環繞園區的單軌列車，行程中可一覽園區美景。
-        .media.mt-2(@click="location.href='page-2-2.html'")
-          img.mr-2(src="https://i.imgur.com/cixUJLi.png", style="width: 150px")
-          .media-body.d-flex.flex-column
-            h6.my-0.text-blue 飛天神奇號(飛天巴士)
-            small.text-red 票價：20 元
-            small.text-gray.text-clamp-2 以迷彩巴士迴旋舉昇，舉昇至最高點時會出現熊讚高舉雙臂。
-        .media.mt-2(@click="location.href='page-2-2.html'")
-          img.mr-2(src="https://i.imgur.com/cixUJLi.png", style="width: 150px")
-          .media-body.d-flex.flex-column
-            h6.my-0.text-blue 宇宙迴旋(輻射飛椅)
-            small.text-red 票價：20 元
-            small.text-gray.text-clamp-2 以八大行星繞行太陽旋轉為主題的輻射飛椅，座椅以各行星彩繪為造型，旋轉時之離心力，如置身於銀河中神祕氛圍!
-        .media.mt-2(@click="location.href='page-2-2.html'")
-          img.mr-2(src="https://i.imgur.com/cixUJLi.png", style="width: 150px")
-          .media-body.d-flex.flex-column
-            h6.my-0.text-blue 星空小飛碟(旋轉小飛機)
-            small.text-red 票價：20 元
-            small.text-gray.text-clamp-2 以飛行機具造型為主題，各座艙可自行操作起伏，猶如飛行機追逐於星空中，外表彩繪有濃濃義大利風味。
-        .media.mt-2(@click="location.href='page-2-2.html'")
-          img.mr-2(src="https://i.imgur.com/cixUJLi.png", style="width: 150px")
-          .media-body.d-flex.flex-column
-            h6.my-0.text-blue 轉轉咖啡杯
-            small.text-red 票價：20 元
-            small.text-gray.text-clamp-2 咖啡杯會以公轉及自轉360度旋轉，全新的彩繪外表更炫麗耀眼!
-        .media.mt-2(@click="location.href='page-2-2.html'")
-          img.mr-2(src="https://i.imgur.com/cixUJLi.png", style="width: 150px")
-          .media-body.d-flex.flex-column
-            h6.my-0.text-blue 巡弋飛椅(迴旋椅)
-            small.text-red 票價：20 元
-            small.text-gray.text-clamp-2 以飛艦起飛意象為主題（獨特造型），四周圍繞著小飛碟座艙，轉盤迴旋時座艙上下起伏盤旋。
-        .media.mt-2(@click="location.href='page-2-2.html'")
-          img.mr-2(src="https://i.imgur.com/cixUJLi.png", style="width: 150px")
-          .media-body.d-flex.flex-column
-            h6.my-0.text-blue 尋寶船(海盜船)
-            small.text-red 票價：30 元
-            small.text-gray.text-clamp-2 仿木造古戰船的造型，以左右擺盪凌空飛渡，體驗離心力的刺激感。
-        .media.mt-2(@click="location.href='page-2-2.html'")
-          img.mr-2(src="https://i.imgur.com/cixUJLi.png", style="width: 150px")
-          .media-body.d-flex.flex-column
-            h6.my-0.text-blue 小飛龍
-            small.text-red 票價：20 元
-            small.text-gray.text-clamp-2 舊有龍鳳船的改良版，以四條可愛飛龍相互追逐為主題之傾斜轉盤可360度旋轉，更好玩更刺激。
-        .media.mt-2(@click="location.href='page-2-2.html'")
-          img.mr-2(src="https://i.imgur.com/cixUJLi.png", style="width: 150px")
-          .media-body.d-flex.flex-column
-            h6.my-0.text-blue 幸福碰碰車
-            small.text-red 票價：30 元
-            small.text-gray.text-clamp-2 以繽紛彩繪的跑車為主題，讓小朋友駕駛最酷、最炫的跑車，奔馳與追逐。
-        .media.mt-2(@click="location.href='page-2-2.html'")
-          img.mr-2(src="https://i.imgur.com/cixUJLi.png", style="width: 150px")
-          .media-body.d-flex.flex-column
-            h6.my-0.text-blue 叢林吼吼樹屋(自由落體)
-            small.text-red 票價：30 元
-            small.text-gray.text-clamp-2 叢林樹屋為造型，座艙可上下昇降，體驗自由落體速度快感。
-      a.btn.btn-lg.btn-block.btn-outline-primary.mt-2(href="page-1-9.html") 回上一頁
+      .row.mx-n1.mt-2
+        .col-6.col-md-3.px-2.my-2
+          .card.card-shadow
+            img.card-img-top(src="https://i.imgur.com/cixUJLi.png")
+            .card-body.py-2.px-3
+              .custom-control.custom-checkbox
+                input#checkGame1.custom-control-input(type="checkbox", value="game1", v-model="h.selected")
+                label.custom-control-label(for="checkGame1") 魔法星際飛車(雲霄飛車)
+        .col-6.col-md-3.px-2.my-2
+          .card.card-shadow
+            img.card-img-top(src="https://i.imgur.com/cixUJLi.png")
+            .card-body.py-2.px-3
+              .custom-control.custom-checkbox
+                input#checkGame2.custom-control-input(type="checkbox", value="game2", v-model="h.selected")
+                label.custom-control-label(for="checkGame2") 海洋總動員
+        .col-6.col-md-3.px-2.my-2
+          .card.card-shadow
+            img.card-img-top(src="https://i.imgur.com/cixUJLi.png")
+            .card-body.py-2.px-3
+              .custom-control.custom-checkbox
+                input#checkGame3.custom-control-input(type="checkbox", value="game3", v-model="h.selected")
+                label.custom-control-label(for="checkGame3") 摩天輪
+        .col-6.col-md-3.px-2.my-2
+          .card.card-shadow
+            img.card-img-top(src="https://i.imgur.com/cixUJLi.png")
+            .card-body.py-2.px-3
+              .custom-control.custom-checkbox
+                input#checkGame4.custom-control-input(type="checkbox", value="game4", v-model="h.selected")
+                label.custom-control-label(for="checkGame4") 銀河號(單軌列車)
+        .col-6.col-md-3.px-2.my-2
+          .card.card-shadow
+            img.card-img-top(src="https://i.imgur.com/cixUJLi.png")
+            .card-body.py-2.px-3
+              .custom-control.custom-checkbox
+                input#checkGame5.custom-control-input(type="checkbox", value="game5", v-model="h.selected")
+                label.custom-control-label(for="checkGame5") 飛天神奇號(飛天巴士)
+        .col-6.col-md-3.px-2.my-2
+          .card.card-shadow
+            img.card-img-top(src="https://i.imgur.com/cixUJLi.png")
+            .card-body.py-2.px-3
+              .custom-control.custom-checkbox
+                input#checkGame6.custom-control-input(type="checkbox", value="game6", v-model="h.selected")
+                label.custom-control-label(for="checkGame6") 宇宙迴旋(輻射飛椅)
+        .col-6.col-md-3.px-2.my-2
+          .card.card-shadow
+            img.card-img-top(src="https://i.imgur.com/cixUJLi.png")
+            .card-body.py-2.px-3
+              .custom-control.custom-checkbox
+                input#checkGame7.custom-control-input(type="checkbox", value="game7", v-model="h.selected")
+                label.custom-control-label(for="checkGame7") 星空小飛碟(旋轉小飛機)
+        .col-6.col-md-3.px-2.my-2
+          .card.card-shadow
+            img.card-img-top(src="https://i.imgur.com/cixUJLi.png")
+            .card-body.py-2.px-3
+              .custom-control.custom-checkbox
+                input#checkGame8.custom-control-input(type="checkbox", value="game8", v-model="h.selected")
+                label.custom-control-label(for="checkGame8") 轉轉咖啡杯
+        .col-6.col-md-3.px-2.my-2
+          .card.card-shadow
+            img.card-img-top(src="https://i.imgur.com/cixUJLi.png")
+            .card-body.py-2.px-3
+              .custom-control.custom-checkbox
+                input#checkGame9.custom-control-input(type="checkbox", value="game9", v-model="h.selected")
+                label.custom-control-label(for="checkGame9") 巡弋飛椅(迴旋椅)
+        .col-6.col-md-3.px-2.my-2
+          .card.card-shadow
+            img.card-img-top(src="https://i.imgur.com/cixUJLi.png")
+            .card-body.py-2.px-3
+              .custom-control.custom-checkbox
+                input#checkGame10.custom-control-input(type="checkbox", value="game10", v-model="h.selected")
+                label.custom-control-label(for="checkGame10") 尋寶船(海盜船)
+        .col-6.col-md-3.px-2.my-2
+          .card.card-shadow
+            img.card-img-top(src="https://i.imgur.com/cixUJLi.png")
+            .card-body.py-2.px-3
+              .custom-control.custom-checkbox
+                input#checkGame11.custom-control-input(type="checkbox", value="game11", v-model="h.selected")
+                label.custom-control-label(for="checkGame11") 小飛龍
+        .col-6.col-md-3.px-2.my-2
+          .card.card-shadow
+            img.card-img-top(src="https://i.imgur.com/cixUJLi.png")
+            .card-body.py-2.px-3
+              .custom-control.custom-checkbox
+                input#checkGame12.custom-control-input(type="checkbox", value="game12", v-model="h.selected")
+                label.custom-control-label(for="checkGame12") 幸福碰碰車
+        .col-6.col-md-3.px-2.my-2
+          .card.card-shadow
+            img.card-img-top(src="https://i.imgur.com/cixUJLi.png")
+            .card-body.py-2.px-3
+              .custom-control.custom-checkbox
+                input#checkGame13.custom-control-input(type="checkbox", value="game13", v-model="h.selected")
+                label.custom-control-label(for="checkGame13") 叢林吼吼樹屋(自由落體)
+      .row.mx-n1
+        .col-4.px-1: a.btn.btn-block.btn-outline-primary.mt-2(href="page-1-9.html") 回上一頁
+        .col-8.px-1: a.btn.btn-block.btn-primary.mt-2(href="page-2-2-1.html") 新增預約
 
 block script
   script.
     window.vm = new Vue({
       el: '#app',
+      data: {
+        h: {
+          selected: [],
+        },
+      },
+      async mounted () {
+        // 自動儲存功能
+        try {
+          const saved = JSON.parse(localStorage.getItem('tcap'))
+          if (saved) this.$set(this, 'h', { ...this.h, ...saved })
+        } catch (err) {}
+        this.$watch('h', () => {
+          localStorage.setItem('tcap', JSON.stringify(this.h))
+        }, { deep: true })
+      },
     })

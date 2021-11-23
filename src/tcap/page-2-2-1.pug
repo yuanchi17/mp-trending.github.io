@@ -1,0 +1,126 @@
+extends /layout/tcap
+
+block style
+  meta(property="og:url", content=`${baseurl}tcap/`)
+  style
+    :sass
+      body
+        background-color: #F2F6F9
+      .icon
+        width: 40px
+
+block content
+  #app(v-cloak)
+    .container.py-3.d-flex.flex-column.min-vh-100
+      h2.text-center.title-style 設施說明
+      template(v-for="game of h.selected" :key="game")
+        .card.my-2.card-shadow(v-if="game === 'game1'")
+          .card-body.py-3
+            h5.card-title.text-dark-blue 魔法星際飛車(雲霄飛車)
+            .row
+              .col-3.px-1.d-flex.flex-column
+                img.icon.mx-auto(src="https://i.imgur.com/CHmjHoX.png")
+                small.text-red.mt-1.mx-auto $30
+              .col-3.px-1.d-flex.flex-column
+                img.icon.mx-auto(src="https://i.imgur.com/XySG6F3.png")
+                small.text-muted.mt-1.mx-auto 2 mins
+              .col-3.px-1.d-flex.flex-column
+                img.icon.mx-auto(src="https://i.imgur.com/GC9QxkT.png")
+                small.text-muted.mt-1.mx-auto 110 cm↑
+            template(v-if="switched.game1")
+              hr
+              p.text-gray.mt-3.mb-0 以科幻造型的雲霄飛車，迴旋於軌道上體驗刺激的速度感。
+              h5.text-blue.mt-3.mb-1 免費搭乘：
+              ul.list-group.text-gray
+                li.list-style-tcap  出示身心障礙證明正本之身心障礙者可免費搭乘，若證明背面註記有必要陪伴者優惠措施使用資格，則亦可享陪伴者1人免費搭乘。
+              h5.text-blue.mt-3.mb-1 搭乘限制：
+              ul.list-group.text-gray
+                li.list-style-tcap 身高未達110公分兒童請勿搭乘，身高達110公分未滿130公分之兒童，必須由成人陪同。
+                li.list-style-tcap 每一座艙限乘載2人。
+                li.list-style-tcap 孕婦、飲酒、高血壓、背部疾病(如頸部、脊椎受傷等)、健康狀況不佳及藥物影響，以及患有心臟血管疾病者，請勿搭乘。
+                li.list-style-tcap 無法使用安全裝置固定者，請勿搭乘。
+            .row
+              .col.px-2: button.btn.btn-block.btn-outline-primary.mt-2(type="button", @click="switched.game1 = !switched.game1") 詳細內容
+              .col.px-2: button.btn.btn-block.btn-outline-primary.mt-2(type="button", @click="h.selected.splice(_.indexOf(h.selected, 'game1'), 1)") 移除設施
+        .card.my-2.card-shadow(v-if="game === 'game4'")
+          .card-body.py-3
+            h5.card-title.text-dark-blue 銀河號(單軌列車)
+            .row
+              .col-3.px-1.d-flex.flex-column
+                img.icon.mx-auto(src="https://i.imgur.com/CHmjHoX.png")
+                small.text-red.mt-1.mx-auto $20
+              .col-3.px-1.d-flex.flex-column
+                img.icon.mx-auto(src="https://i.imgur.com/XySG6F3.png")
+                small.text-muted.mt-1.mx-auto 3-4 mins
+            template(v-if="switched.game4")
+              hr
+              p.text-gray.mt-3.mb-0 環繞園區的單軌列車，行程中可一覽園區美景。
+              h5.text-blue.mt-3.mb-1 免費搭乘：
+              ul.list-group.text-gray
+                li.list-style-tcap 針對身高未滿85公分之幼童，或身高超過85公分但未滿2歲之幼童(須出示證明文件)，在親友陪同下可免費搭乘遊具，親友仍需付費。
+                li.list-style-tcap 出示身心障礙證明正本之身心障礙者可免費搭乘，若證明背面註記有必要陪伴者優惠措施使用資格，則亦可享陪伴者1人免費搭乘。
+              h5.text-blue.mt-3.mb-1 搭乘限制：
+              ul.list-group.text-gray
+                li.list-style-tcap 身高未達100公分兒童必須由成人陪同。
+                li.list-style-tcap 每一車廂限乘載6人(第一節車廂為4人)。
+                li.list-style-tcap 孕婦、飲酒、健康狀況不佳及藥物影響，以及患有心臟血管疾病者，請勿搭乘。
+                li.list-style-tcap 身心障礙者，基於安全，必須由成人陪同。
+            .row
+              .col.px-2: button.btn.btn-block.btn-outline-primary.mt-2(type="button", @click="switched.game4 = !switched.game4") 詳細內容
+              .col.px-2: button.btn.btn-block.btn-outline-primary.mt-2(type="button", @click="h.selected.splice(_.indexOf(h.selected, 'game4'), 1)") 移除設施
+        .card.my-2.card-shadow(v-if="game === 'game6'")
+          .card-body.py-3
+            h5.card-title.text-dark-blue 宇宙迴旋(輻射飛椅)
+            .row
+              .col-3.px-1.d-flex.flex-column
+                img.icon.mx-auto(src="https://i.imgur.com/CHmjHoX.png")
+                small.text-red.mt-1.mx-auto $20
+              .col-3.px-1.d-flex.flex-column
+                img.icon.mx-auto(src="https://i.imgur.com/XySG6F3.png")
+                small.text-muted.mt-1.mx-auto 2-3 mins
+              .col-3.px-1.d-flex.flex-column
+                img.icon.mx-auto(src="https://i.imgur.com/GC9QxkT.png")
+                small.text-muted.mt-1.mx-auto 95 cm↑
+              .col-3.px-1.d-flex.flex-column
+                img.icon.mx-auto(src="https://i.imgur.com/q6n3C0C.png")
+                small.text-muted.mt-1.mx-auto 100 kg↓
+            template(v-if="switched.game6")
+              hr
+              p.text-gray.mt-3.mb-0 以八大行星繞行太陽旋轉為主題的輻射飛椅，座椅以各行星彩繪為造型，旋轉時之離心力，如置身於銀河中神祕氛圍！
+              h5.text-blue.mt-3.mb-1 免費搭乘：
+              ul.list-group.text-gray
+                li.list-style-tcap 出示身心障礙證明正本之身心障礙者可免費搭乘，若證明背面註記有必要陪伴者優惠措施使用資格，則亦可享陪伴者1人免費搭乘。
+              h5.text-blue.mt-3.mb-1 搭乘限制：
+              ul.list-group.text-gray
+                li.list-style-tcap 身高未達95公分兒童及超過190公分之成人請勿搭乘；身高達95公分未滿100公分之兒童，必須由成人陪同。
+                li.list-style-tcap 每一座艙限乘載2人。
+                li.list-style-tcap 孕婦、飲酒、高血壓、背部疾病(如頸部、脊椎受傷等)、健康狀況不佳及藥物影響，以及患有心臟血管疾病者，請勿搭乘。
+                li.list-style-tcap 無法使用安全裝置固定者，請勿搭乘。
+            .row
+              .col.px-2: button.btn.btn-block.btn-outline-primary.mt-2(type="button", @click="switched.game6 = !switched.game6") 詳細內容
+              .col.px-2: button.btn.btn-block.btn-outline-primary.mt-2(type="button", @click="h.selected.splice(_.indexOf(h.selected, 'game6'), 1)") 移除設施
+      .row.mx-n1
+        .col.px-1: a.btn.btn-lg.btn-block.btn-primary.mt-2(href="page-2-1.html") 重新選擇
+        .col.px-1: a.btn.btn-lg.btn-block.btn-primary.mt-2(href="page-2-2-2.html") 時段設定
+
+block script
+  script.
+    window.vm = new Vue({
+      el: '#app',
+      data: {
+        switched: { game1: false, game4: false, game6: false },
+        h: {
+          selected: [],
+        },
+      },
+      async mounted () {
+        // 自動儲存功能
+        try {
+          const saved = JSON.parse(localStorage.getItem('tcap'))
+          if (saved) this.$set(this, 'h', { ...this.h, ...saved })
+        } catch (err) {}
+        this.$watch('h', () => {
+          localStorage.setItem('tcap', JSON.stringify(this.h))
+        }, { deep: true })
+      },
+    })

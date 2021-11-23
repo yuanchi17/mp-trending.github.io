@@ -6,9 +6,6 @@ block style
     :sass
       body
         background-color: #F2F6F9
-      .card
-        border: 0px
-        box-shadow: 0 2px 8px rgba(0,0,0, .08)
       img
         height: 15px
         width: 15px
@@ -17,7 +14,7 @@ block content
   #app(v-cloak)
     .container.d-flex.flex-column.min-vh-100
       h2.my-3.text-center.title-style 預約紀錄
-      .card.my-2(v-for="(order, oId) of orders", :key="order.date")
+      .card.my-2.card-shadow(v-for="(order, oId) of orders", :key="order.date")
         .card-body
           .d-flex.mb-2(@click="order.expand = !order.expand")
             h4.mb-0.card-title.text-blue {{ order.date }}

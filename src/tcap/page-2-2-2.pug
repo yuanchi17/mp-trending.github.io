@@ -1,0 +1,95 @@
+extends /layout/tcap
+
+block style
+  meta(property="og:url", content=`${baseurl}tcap/`)
+  style
+    :sass
+      body
+        background-color: #F2F6F9
+
+block content
+  #app(v-cloak)
+    .container.py-3.d-flex.flex-column.min-vh-100
+      h2.text-center.title-style 設施預約
+      template(v-for="(game, i) of h.selected" :key="game")
+        .card.my-2.card-shadow(v-if="game === 'game1' || game === 'game4' || game === 'game6'")
+          .card-body
+            h5.card-title.text-dark-blue(v-if="game === 'game1'") 魔法星際飛車(雲霄飛車)
+            h5.card-title.text-dark-blue(v-if="game === 'game4'") 銀河號(單軌列車)
+            h5.card-title.text-dark-blue(v-if="game === 'game6'") 宇宙迴旋(輻射飛椅)
+            select.form-control(v-model="form[i].time")
+              option(value='') 請選擇時段
+              option(value='09:20 ~ 09:30') 09:20 ~ 09:30
+              option(value='09:30 ~ 09:40') 09:30 ~ 09:40
+              option(value='09:40 ~ 09:50') 09:40 ~ 09:50
+            .ticket.d-flex.flex-column
+              .d-flex.mt-2.align-items-center
+                .flex-fill.mr-1.text-blue 成人
+                .ticket-amount
+                  .input-group
+                    .input-group-prepend: button.btn.btn-primary(type="button", @click="form[i].normal--", :disabled="form[i].normal < 1"): i.fa.fa-minus
+                    input.form-control.text-center(type="number", min="0", max="10", v-model.number="form[i].normal")
+                    .input-group-append: button.btn.btn-primary(type="button", @click="form[i].normal++", :disabled="form[i].normal > 9"): i.fa.fa-plus
+              .d-flex.mt-2.align-items-center
+                .flex-fill.mr-1.text-blue 兒童
+                .ticket-amount
+                  .input-group
+                    .input-group-prepend: button.btn.btn-primary(type="button", @click="form[i].kid--", :disabled="form[i].kid < 1"): i.fa.fa-minus
+                    input.form-control.text-center(type="number", min="0", max="10", v-model.number="form[i].kid")
+                    .input-group-append: button.btn.btn-primary(type="button", @click="form[i].kid++", :disabled="form[i].kid > 9"): i.fa.fa-plus
+      .row.mx-n1
+        .col-4.px-1: a.btn.btn-block.btn-outline-primary.mt-2(href="page-2-2-1.html") 回上一頁
+        .col-8.px-1: button.btn.btn-block.btn-primary.mt-2(@click="btnSuccess") 新增預約
+
+block script
+  script.
+    window.vm = new Vue({
+      el: '#app',
+      data: {
+        form: [],
+        h: {
+          selected: [],
+        },
+      },
+      async mounted () {
+        // 自動儲存功能
+        try {
+          const saved = JSON.parse(localStorage.getItem('tcap'))
+          if (saved) this.$set(this, 'h', { ...this.h, ...saved })
+        } catch (err) {}
+        this.$watch('h', () => {
+          localStorage.setItem('tcap', JSON.stringify(this.h))
+        }, { deep: true })
+
+        this.$set(this, 'form', _.times(this.h.selected.length, () => { return { time: '', normal: 0, kid: 0 } }))
+      },
+      methods: {
+        async btnSuccess () {
+          const date = this.h.submit.date
+          const tmp = _.find(this.h.orders, { date }) || this.h.orders[0]
+          const form = this.form
+
+          let name
+          const games = []
+          const listItems = (_.map(this.h.selected, (game, i) => {
+            if (game === 'game1') name = '魔法星際飛車(雲霄飛車)'
+            else if (game === 'game4') name = '銀河號(單軌列車)'
+            else if (game === 'game6') name = '宇宙迴旋(輻射飛椅)'
+            else return
+            games.push({ name, ...form[i] })
+            return `<li class="list-group-item p-0 py-2"><h5 class="text-blue">${name}</h5><div class="text-gray-light">場次時間：${form[i].time}<br>成人：${form[i].normal} 位<br>兒童：${form[i].kid} 位</div></li>`
+          })).join('')
+
+          tmp.games = games
+          this.$set(this.h, 'selected', [])
+          await Swal.fire({
+            confirmButtonText: '設施清單',
+            customClass: { content: 'text-left' },
+            html: `<p class="title-style text-center">入園日期：${tmp.date}</p><ul class="list-group list-group-flush">${listItems}</ul>`,
+            icon: 'success',
+            title: `<h2 class="title-style m-0">設施預約成功</h2>`,
+          })
+          location.href = 'page-1-9.html?' + window.httpBuildQuery({ date })
+        },
+      },
+    })
