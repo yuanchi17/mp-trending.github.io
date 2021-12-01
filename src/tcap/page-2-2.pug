@@ -30,15 +30,15 @@ block content
           option 09:30 ~ 09:40
       .ticket.d-flex.flex-column
         .d-flex.mt-2.align-items-center(v-for="ticket of tickets")
-          .flex-fill.mr-1.ticket-title.text-blue {{ ticket.title }}
+          .flex-fill.mr-1.text-blue {{ ticket.title }}
           .ticket-amount
             .input-group
               .input-group-prepend: button.btn.btn-primary(type="button", @click="ticket.amount--", :disabled="ticket.amount < 1"): i.fa.fa-minus
               input.form-control.text-center(type="number", min="0", max="10", v-model.number="ticket.amount")
               .input-group-append: button.btn.btn-primary(type="button", @click="ticket.amount++", :disabled="ticket.amount > 9"): i.fa.fa-plus
       .d-flex.mt-3
-        a.btn.btn-lg.btn-outline-primary(href="page-1-9.html") 回上一頁
-        button.btn.btn-lg.btn-primary.flex-fill.ml-2(type="button", @click="btnSuccess") 新增預約
+        a.btn.btn-outline-primary(href="page-1-9.html") 回上一頁
+        button.btn.btn-primary.flex-fill.ml-2(type="button", @click="btnSuccess") 新增預約
 
 block script
   script.

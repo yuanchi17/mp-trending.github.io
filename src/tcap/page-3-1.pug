@@ -154,7 +154,7 @@ block script
         },
         async btnShare () {
           const url = new URL('https://liff.line.me/#{liffidFull}/tcap-share.html')
-          url.searchParams.set('redirect', window.encodeBase64url('/tcap/page-3-1.html'))
+          url.searchParams.set('redirect', window.encodeBase64url('../tcap/page-3-1.html'))
           location.href = url.href
           return await new Promise(resolve => {}) // 不會結束的 Promise
         },

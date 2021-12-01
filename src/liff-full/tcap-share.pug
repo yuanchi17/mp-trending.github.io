@@ -51,12 +51,12 @@ block script
           this.showLoading('請稍候', '載入中')
           await loginPromise
           await this.btnShare()
-          const redirect = localStorage.getItem('tcap-redirect') || '/tcap/page-1-4.html'
+          const redirect = new URL(localStorage.getItem('tcap-redirect') || '../tcap/page-1-4.html', location).href
           localStorage.removeItem('tcap-redirect')
-          liff.openWindow({ external: true, url: `${location.origin}${redirect}` })
+          liff.openWindow({ external: true, url: redirect })
         },
         async initTpl () {
-          const tpl = '/tpl/tcap-share.txt'
+          const tpl = new URL('../tpl/tcap-share.txt', location).href
           const render = _.template(_.get(await axios.get(tpl, {
             params: { cachebust: Date.now() },
             transformResponse: [],
@@ -70,7 +70,7 @@ block script
             const profile = await loginPromise
             const msgs = this.getRenderedMsgs({
               profile,
-              url: new URL(`${location.origin}/tcap/page-6-1.html?openExternalBrowser=1`),
+              url: new URL('../tcap/page-6-1.html?openExternalBrowser=1', location).href,
             })
             const beforeShare = Date.now()
             const res = await liff.shareTargetPicker(msgs)
