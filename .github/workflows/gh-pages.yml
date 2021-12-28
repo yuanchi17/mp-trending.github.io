@@ -37,6 +37,7 @@ jobs:
       run: yarn build
       env:
         BASEURL: ${{ secrets.BASEURL }}
+        LIFFID_CARD: ${{ secrets.LIFFID_CARD }}
         LIFFID_FULL: ${{ secrets.LIFFID_FULL }}
         LIFFID_SHARE_CSV: ${{ secrets.LIFFID_SHARE_CSV }}
         LIFFID_SHARE: ${{ secrets.LIFFID_SHARE }}
