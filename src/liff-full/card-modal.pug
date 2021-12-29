@@ -167,6 +167,7 @@ block script
 
             const share = new URL(liff.permanentLink.createUrl())
             share.searchParams.set('referral', profile.userId)
+            share.searchParams.set('source', 'friend')
 
             const msgs = this.getRenderedMsgs({
               data: this.item,
