@@ -152,7 +152,7 @@ block script
           if (referral) gtag('event', 'campaign_referral', { campaign, line_id: referral })
         },
         async initTpl () {
-          const tpl = '../tpl/card-modal.txt'
+          const tpl = '/tpl/card-modal.txt'
           const render = _.template(_.get(await axios.get(tpl, {
             params: { cachebust: Date.now() },
             transformResponse: [],
