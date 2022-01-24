@@ -1,0 +1,148 @@
+<%
+function renderCard (ctx) {
+  const { imgur, profile, share, text } = ctx
+  return {
+    type: 'flex',
+    altText: `${profile.displayName}製作了一張卡片給你`,
+    contents: {
+      type: 'bubble',
+      body: {
+        layout: 'vertical',
+        spacing: 'md',
+        type: 'box',
+        contents: [
+          {
+            text,
+            type: 'text',
+            wrap: true,
+          },
+        ],
+      },
+      footer: {
+        layout: 'vertical',
+        spacing: 'md',
+        type: 'box',
+        contents: [
+          {
+            color: '#242a36',
+            style: 'primary',
+            type: 'button',
+            action: {
+              label: '製作卡片',
+              type: 'uri',
+              uri: share,
+            },
+          },
+          {
+            alignItems: 'center',
+            height: '20px',
+            layout: 'horizontal',
+            spacing: 'md',
+            type: 'box',
+            contents: [
+              {
+                cornerRadius: '999px',
+                height: '20px',
+                layout: 'vertical',
+                type: 'box',
+                width: '20px',
+                contents: [
+                  {
+                    aspectMode: 'cover',
+                    size: 'full',
+                    type: 'image',
+                    url: 'https://i.imgur.com/UPVXFll.png',
+                  },
+                ],
+              },
+              {
+                color: '#999999',
+                size: 'sm',
+                text: '加入捷安特旅行社官方帳號',
+                type: 'text',
+                action: {
+                  label: 'action',
+                  type: 'uri',
+                  uri: 'https://line.me/R/ti/p/@giantadventure',
+                },
+              },
+              {
+                cornerRadius: '999px',
+                height: '20px',
+                layout: 'vertical',
+                type: 'box',
+                width: '20px',
+                contents: [
+                  {
+                    aspectMode: 'cover',
+                    size: 'full',
+                    type: 'image',
+                    url: 'https://i.imgur.com/KxA2Jh7.png',
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      header: {
+        backgroundColor: '#5bd1c9',
+        layout: 'horizontal',
+        paddingAll: '15px',
+        spacing: 'md',
+        type: 'box',
+        contents: [
+          {
+            backgroundColor: '#eeeeee',
+            cornerRadius: '999px',
+            height: '60px',
+            layout: 'vertical',
+            type: 'box',
+            width: '60px',
+            contents: [
+              {
+                align: 'center',
+                aspectMode: 'cover',
+                aspectRatio: '1:1',
+                gravity: 'center',
+                size: 'full',
+                type: 'image',
+                url: profile.pictureUrl || 'https://i.imgur.com/N8j56jz.png',
+              },
+            ],
+          },
+          {
+            justifyContent: 'center',
+            layout: 'vertical',
+            type: 'box',
+            contents: [
+              {
+                color: '#005541',
+                size: 'sm',
+                text: profile.displayName,
+                type: 'text',
+              },
+              {
+                color: '#005541',
+                margin: 'sm',
+                size: 'lg',
+                text: '有話想跟你說',
+                type: 'text',
+                weight: 'bold',
+              },
+            ],
+          },
+        ],
+      },
+      hero: {
+        aspectMode: 'cover',
+        aspectRatio: '1:1',
+        size: 'full',
+        type: 'image',
+        url: `https://i.imgur.com/${imgur}.png`,
+      },
+    },
+  }
+}
+print(JSON.stringify(renderCard({ imgur, profile, share, text })))
+%>
